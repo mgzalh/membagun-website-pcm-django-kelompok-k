@@ -1,0 +1,70 @@
+{% load static %}
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{% if organization and organization.tagline %}{{ organization.tagline }}{% else %}Informasi Pimpinan Cabang Muhammadiyah Kottabarat{% endif %}">
+  <title>{% block title %}PCM Kottabarat{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'website/site.css' %}">
+</head>
+<body>
+  <a class="skip-link" href="#konten">Lewati ke konten</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{% url 'website:home' %}">
+        <img src="{% static 'website/muhammadiyah.svg' %}" alt="Logo Muhammadiyah">
+        <span>
+          <strong>{% if organization %}{{ organization.short_name }}{% else %}PCM Kottabarat{% endif %}</strong>
+          <small>{% if organization and organization.tagline %}{{ organization.tagline }}{% else %}Pimpinan Cabang Muhammadiyah{% endif %}</small>
+        </span>
+      </a>
+      <input class="nav-toggle" type="checkbox" id="nav-toggle" aria-label="Buka menu navigasi">
+      <label class="nav-toggle-label" for="nav-toggle"><span></span><span></span><span></span></label>
+      <nav class="main-nav" aria-label="Navigasi utama">
+        <a href="{% url 'website:home' %}">Beranda</a>
+        <a href="{% url 'website:profile' %}">Profil</a>
+        <a href="{% url 'website:leaders' %}">Pimpinan</a>
+        <a href="{% url 'website:branches' %}">Ranting</a>
+        <a href="{% url 'website:charities' %}">Amal Usaha</a>
+        <a href="{% url 'website:articles' %}">Berita</a>
+        <a href="{% url 'website:agenda' %}">Agenda</a>
+        <a href="{% url 'website:downloads' %}">Unduhan</a>
+        <a class="nav-contact" href="{% url 'website:contact' %}">Kontak</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="konten">
+    {% if messages %}
+      <div class="container message-list" role="status">
+        {% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <section>
+        <h2>{% if organization %}{{ organization.name }}{% else %}Pimpinan Cabang Muhammadiyah Kottabarat{% endif %}</h2>
+        <p>{% if organization and organization.office_address %}{{ organization.office_address|linebreaksbr }}{% else %}Alamat sekretariat belum tersedia.{% endif %}</p>
+        {% if organization and organization.official_phone %}<p>Telepon: {{ organization.official_phone }}</p>{% endif %}
+        {% if organization and organization.official_email %}<p>Email: <a href="mailto:{{ organization.official_email }}">{{ organization.official_email }}</a></p>{% endif %}
+      </section>
+      <section>
+        <h2>Tautan Persyarikatan</h2>
+        <ul class="footer-links">
+          {% for link in related_links %}<li><a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.name }}</a></li>{% empty %}
+          <li>Tautan sedang dilengkapi.</li>{% endfor %}
+        </ul>
+      </section>
+    </div>
+    <div class="container footer-bottom">
+      <p>Website ini dibuat untuk tugas kuliah Pemrograman Web berbasis Framework, bukan website resmi PCM Kottabarat.</p>
+      <p>Logo Muhammadiyah: K. H. Siradj Dahlan, vektor oleh Hibensis, via Wikimedia Commons, lisensi CC BY-SA 4.0.</p>
+      <p>&copy; {% now "Y" %} PCM Kottabarat</p>
+    </div>
+  </footer>
+</body>
+</html>
