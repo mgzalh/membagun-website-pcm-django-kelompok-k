@@ -1,0 +1,15 @@
+{% extends "website/base.html" %}
+{% block title %}Pimpinan | PCM Kottabarat{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow">Penggerak persyarikatan</p><h1>Pimpinan</h1><p>Susunan pimpinan PCM Kottabarat.</p></div></section>
+<section class="section container">
+  <div class="people-grid">
+    {% for leader in leaders %}
+      <article class="person-card">
+        {% if leader.photo %}<img src="{{ leader.photo.url }}" alt="Foto {{ leader.name }}">{% else %}<div class="person-placeholder" aria-hidden="true">{{ leader.name|first }}</div>{% endif %}
+        <div><h2>{{ leader.name }}</h2><p>{{ leader.position }}</p>{% if leader.period %}<small>Periode {{ leader.period }}</small>{% endif %}{% if leader.photo_credit %}<small class="photo-credit">{{ leader.photo_credit }}</small>{% endif %}</div>
+      </article>
+    {% empty %}<p class="empty-state">Data pimpinan belum tersedia. Nama dan periode akan ditampilkan setelah dikonfirmasi dari sumber resmi.</p>{% endfor %}
+  </div>
+</section>
+{% endblock %}

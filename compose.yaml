@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-pcm_db}
+      POSTGRES_USER: ${POSTGRES_USER:-pcm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pcm_local_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pcm_user} -d ${POSTGRES_DB:-pcm_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-local-docker-only-secret-key-keep-this-out-of-production}
+      DEBUG: ${DEBUG:-False}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,web}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:-}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-pcm_user}:${POSTGRES_PASSWORD:-pcm_local_password}@db:5432/${POSTGRES_DB:-pcm_db}
+      CONN_MAX_AGE: ${CONN_MAX_AGE:-0}
+      SECURE_SSL_REDIRECT: ${SECURE_SSL_REDIRECT:-False}
+      SECURE_HSTS_SECONDS: ${SECURE_HSTS_SECONDS:-0}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-False}
+      CSRF_COOKIE_SECURE: ${CSRF_COOKIE_SECURE:-False}
+      PORT: ${PORT:-8000}
+      AWS_STORAGE_BUCKET_NAME: ${AWS_STORAGE_BUCKET_NAME:-}
+      AWS_S3_REGION_NAME: ${AWS_S3_REGION_NAME:-}
+      AWS_S3_ENDPOINT_URL: ${AWS_S3_ENDPOINT_URL:-}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+    ports:
+      - "${PORT:-8000}:${PORT:-8000}"
+    volumes:
+      - media_data:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  media_data:

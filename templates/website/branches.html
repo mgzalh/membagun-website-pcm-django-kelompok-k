@@ -1,0 +1,12 @@
+{% extends "website/base.html" %}
+{% block title %}Ranting | PCM Kottabarat{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow">Jejaring dakwah</p><h1>Ranting Muhammadiyah</h1><p>Daftar ranting yang berada di lingkungan PCM Kottabarat.</p></div></section>
+<section class="section container">
+  {% if branches %}
+  <div class="table-wrap"><table><thead><tr><th>Nama ranting</th><th>Ketua</th><th>Alamat</th><th>Kontak resmi</th></tr></thead><tbody>
+    {% for branch in branches %}<tr><th scope="row">{{ branch.name }}</th><td>{{ branch.chairperson|default:"—" }}</td><td>{{ branch.address|default:"—"|linebreaksbr }}</td><td>{{ branch.official_phone|default:"—" }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  {% else %}<p class="empty-state">Data ranting belum tersedia dan akan dilengkapi setelah diverifikasi.</p>{% endif %}
+</section>
+{% endblock %}
