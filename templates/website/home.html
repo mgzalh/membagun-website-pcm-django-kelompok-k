@@ -1,0 +1,68 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% block title %}Beranda | PCM Kottabarat{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Pimpinan Cabang Muhammadiyah · Surakarta</p>
+      <h1>{% if profile %}{{ profile.name }}{% else %}PCM Kottabarat{% endif %}</h1>
+      <p class="hero-lead">{% if profile and profile.tagline %}{{ profile.tagline }}{% else %}Ruang informasi kegiatan, kabar, dan layanan Persyarikatan di Kottabarat.{% endif %}</p>
+      <a class="button button-light" href="{% url 'website:profile' %}">Kenali PCM Kottabarat</a>
+    </div>
+    <div class="hero-art">
+      {% if profile and profile.hero_image %}
+        <figure>
+          <img class="hero-photo" src="{{ profile.hero_image.url }}" alt="Foto utama PCM Kottabarat">
+          {% if profile.hero_image_credit %}<figcaption>{{ profile.hero_image_credit }}</figcaption>{% endif %}
+        </figure>
+      {% else %}
+        <div class="hero-mark" aria-hidden="true">
+          <img src="{% static 'website/muhammadiyah.svg' %}" alt="">
+          <span>Kottabarat<br>Surakarta</span>
+        </div>
+      {% endif %}
+      <span class="hero-orbit orbit-one"></span><span class="hero-orbit orbit-two"></span>
+    </div>
+  </div>
+</section>
+
+<section class="container stats" aria-label="Ringkasan organisasi">
+  <div class="stat-card"><strong>{% if branch_count %}{{ branch_count }}{% else %}—{% endif %}</strong><span>Ranting terdata</span></div>
+  <div class="stat-card"><strong>{% if charity_count %}{{ charity_count }}{% else %}—{% endif %}</strong><span>Amal usaha terdata</span></div>
+  <div class="stat-card"><strong>{% if profile and profile.ktam_members %}{{ profile.ktam_members }}{% else %}—{% endif %}</strong><span>Anggota ber-KTAM</span></div>
+</section>
+
+<section class="section container">
+  <div class="section-heading">
+    <div><p class="eyebrow">Kabar persyarikatan</p><h2>Berita terbaru</h2></div>
+    <a class="text-link" href="{% url 'website:articles' %}">Semua berita <span aria-hidden="true">→</span></a>
+  </div>
+  <div class="card-grid">
+    {% for article in latest_articles %}
+      {% include "website/includes/article_card.html" with article=article %}
+    {% empty %}
+      <p class="empty-state">Berita sedang disiapkan.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section section-tint">
+  <div class="container">
+    <div class="section-heading">
+      <div><p class="eyebrow">Catat tanggalnya</p><h2>Agenda mendatang</h2></div>
+      <a class="text-link" href="{% url 'website:agenda' %}">Lihat agenda <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="event-list">
+      {% for event in upcoming_events %}
+        <article class="event-item">
+          <div class="event-date"><span>{{ event.starts_at|date:"d" }}</span>{{ event.starts_at|date:"M Y" }}</div>
+          <div><h3>{{ event.name }}</h3><p>{{ event.starts_at|date:"l, d F Y · H:i" }}{% if event.place %} · {{ event.place }}{% endif %}</p></div>
+        </article>
+      {% empty %}
+        <p class="empty-state">Belum ada agenda mendatang yang dipublikasikan.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
