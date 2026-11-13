@@ -1,0 +1,17 @@
+{% extends "website/base.html" %}
+{% block title %}Profil | PCM Kottabarat{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow">Mengenal persyarikatan</p><h1>Profil PCM Kottabarat</h1><p>Informasi organisasi yang telah dipublikasikan dan diverifikasi.</p></div></section>
+<section class="container content-layout">
+  <article class="prose">
+    <h2>Tentang</h2><p>{% if profile and profile.about %}{{ profile.about|linebreaksbr }}{% else %}Informasi profil belum tersedia. Silakan hubungi pengurus untuk melengkapi data yang terverifikasi.{% endif %}</p>
+    <h2>Sejarah</h2><p>{% if profile and profile.history %}{{ profile.history|linebreaksbr }}{% else %}Informasi sejarah belum tersedia.{% endif %}</p>
+    <h2>Visi</h2><p>{% if profile and profile.vision %}{{ profile.vision|linebreaksbr }}{% else %}Informasi visi belum tersedia.{% endif %}</p>
+    <h2>Misi</h2>
+    {% if profile and profile.missions %}
+      <ol>{% for mission in profile.mission_list %}<li>{{ mission }}</li>{% endfor %}</ol>
+    {% else %}<p>Informasi misi belum tersedia.</p>{% endif %}
+  </article>
+  <aside class="notice-card"><span class="notice-icon" aria-hidden="true">i</span><h2>Data terverifikasi</h2><p>Informasi yang belum tersedia tidak diisi dengan perkiraan. Data organisasi dapat diperbarui pengurus melalui panel admin.</p></aside>
+</section>
+{% endblock %}
