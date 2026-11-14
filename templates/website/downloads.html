@@ -1,0 +1,11 @@
+{% extends "website/base.html" %}
+{% block title %}Unduhan | PCM Kottabarat{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow">Dokumen publik</p><h1>Unduhan</h1><p>Dokumen resmi yang dibagikan oleh PCM Kottabarat.</p></div></section>
+<section class="section container">
+  <div class="document-list">
+    {% for document in documents %}<article class="document-item"><div><h2>{{ document.title }}</h2>{% if document.description %}<p>{{ document.description }}</p>{% endif %}<small>Diunggah {{ document.uploaded_at|date:"d F Y" }}</small></div><a class="button button-outline" href="{{ document.file.url }}" download>Unduh</a></article>
+    {% empty %}<p class="empty-state">Belum ada dokumen publik untuk diunduh.</p>{% endfor %}
+  </div>
+</section>
+{% endblock %}
