@@ -1,0 +1,17 @@
+{% extends "website/base.html" %}
+{% block title %}{{ article.title }} | PCM Kottabarat{% endblock %}
+{% block content %}
+<article class="container article-detail">
+  <p class="eyebrow"><a href="{% url 'website:articles' %}">Berita</a> · {{ article.published_at|date:"d F Y" }}</p>
+  <h1>{{ article.title }}</h1>
+  {% if article.cover %}<img class="detail-cover" src="{{ article.cover.url }}" alt="">{% if article.cover_credit %}<p class="photo-credit">{{ article.cover_credit }}</p>{% endif %}{% endif %}
+  <p class="article-summary">{{ article.summary }}</p>
+  <div class="prose">{{ article.body|linebreaks }}</div>
+  {% if article.source_url %}<p class="source-note">Sumber: <a href="{{ article.source_url }}" target="_blank" rel="noopener noreferrer">{{ article.source_name|default:"Sumber berita" }}</a></p>{% endif %}
+</article>
+{% if related_articles %}
+<section class="section section-tint"><div class="container"><div class="section-heading"><h2>Berita lainnya</h2></div><div class="card-grid">
+  {% for related in related_articles %}{% include "website/includes/article_card.html" with article=related %}{% endfor %}
+</div></div></section>
+{% endif %}
+{% endblock %}

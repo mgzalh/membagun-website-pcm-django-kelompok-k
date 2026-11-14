@@ -1,0 +1,17 @@
+{% extends "website/base.html" %}
+{% block title %}Agenda | PCM Kottabarat{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow">Kegiatan persyarikatan</p><h1>Agenda</h1><p>Jadwal kegiatan dan dokumentasi agenda yang telah terlaksana.</p></div></section>
+<section class="section container">
+  <h2>Agenda akan datang</h2>
+  <div class="event-list">
+    {% for event in upcoming_events %}<article class="event-item"><div class="event-date"><span>{{ event.starts_at|date:"d" }}</span>{{ event.starts_at|date:"M Y" }}</div><div><h3>{{ event.name }}</h3><p>{{ event.starts_at|date:"l, d F Y · H:i" }}{% if event.place %} · {{ event.place }}{% endif %}</p>{% if event.description %}<p>{{ event.description }}</p>{% endif %}</div></article>
+    {% empty %}<p class="empty-state">Belum ada agenda mendatang yang dipublikasikan.</p>{% endfor %}
+  </div>
+  <h2 class="past-heading">Sudah terlaksana</h2>
+  <div class="event-list">
+    {% for event in past_events %}<article class="event-item event-past"><div class="event-date"><span>{{ event.starts_at|date:"d" }}</span>{{ event.starts_at|date:"M Y" }}</div><div><h3>{{ event.name }}</h3><p>{{ event.starts_at|date:"l, d F Y · H:i" }}{% if event.place %} · {{ event.place }}{% endif %}</p>{% if event.description %}<p>{{ event.description }}</p>{% endif %}{% if event.source_url %}<p><a href="{{ event.source_url }}" target="_blank" rel="noopener noreferrer">Lihat sumber</a></p>{% endif %}</div></article>
+    {% empty %}<p class="empty-state">Belum ada agenda lampau yang dicatat.</p>{% endfor %}
+  </div>
+</section>
+{% endblock %}
