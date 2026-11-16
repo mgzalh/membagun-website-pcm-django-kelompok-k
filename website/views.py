@@ -46,7 +46,25 @@ def leaders(request):
 
 
 def branches(request):
-    return render(request, "website/branches.html", {"branches": Branch.objects.all()})
+    branches_qs = Branch.objects.all()
+    pcm_info = OrganizationProfile.objects.first()
+    pcm_data = None
+    if pcm_info:
+        leader_ketua = Leader.objects.filter(tier=Leader.Tier.CHIEF).first()
+        pcm_data = {
+            "name": pcm_info.name,
+            "chairperson": leader_ketua.name if leader_ketua else "Joko Susilo, S.TP., S.Pd.I., M.Pd",
+            "address": pcm_info.office_address,
+        }
+    return render(
+        request,
+        "website/branches.html",
+        {
+            "branches": branches_qs,
+            "branch_count": branches_qs.count(),
+            "pcm": pcm_data,
+        },
+    )
 
 
 def charities(request):
