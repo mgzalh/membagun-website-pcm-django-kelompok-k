@@ -1,4 +1,40 @@
 {% extends "website/base.html" %}
+<<<<<<< HEAD
+{% load static %}
+{% block title %}Amal Usaha | PCM Kottabarat{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow">Layanan persyarikatan</p><h1>Amal Usaha Muhammadiyah</h1><p>Lembaga pendidikan Muhammadiyah dan Aisyiyah di Kottabarat.</p></div></section>
+<section class="section container">
+  <div class="section-heading">
+    <div><p class="eyebrow">Muhammadiyah dan Aisyiyah</p><h2>Pendidikan</h2></div>
+    <span class="count-label">{{ charities|length }} lembaga pendidikan</span>
+  </div>
+  {% if charities %}
+    <div class="education-grid">
+      {% for charity in charities %}
+        <article class="education-card">
+          {% if charity.image %}
+            <img class="education-photo" src="{{ charity.image.url }}" alt="Foto {{ charity.name }}">
+            {% if charity.image_credit %}<small class="photo-credit">{{ charity.image_credit }}</small>{% endif %}
+          {% else %}
+            <div class="education-visual" aria-hidden="true">PENDIDIKAN</div>
+          {% endif %}
+          <div class="education-card-body">
+            {% if charity.education_level %}<span class="education-level">{{ charity.education_level }}</span>{% endif %}
+            <h3>{{ charity.name }}</h3>
+            <dl class="education-details">
+              {% if charity.year %}<div><dt>{{ charity.year_label|default:"Tahun" }}</dt><dd>{{ charity.year }}</dd></div>{% endif %}
+              <div><dt>Bidang</dt><dd>{{ charity.description|default:"Pendidikan" }}</dd></div>
+            </dl>
+            <div class="education-address"><strong>Alamat</strong><p>{{ charity.address|default:"Alamat belum tersedia."|linebreaksbr }}</p></div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-state">Data lembaga pendidikan belum tersedia.</p>
+  {% endif %}
+=======
 {% block title %}Amal Usaha | PCM Kottabarat{% endblock %}
 {% block content %}
 <section class="page-hero"><div class="container"><p class="eyebrow">Layanan persyarikatan</p><h1>Amal Usaha Muhammadiyah</h1><p>Daftar amal usaha dikelompokkan berdasarkan bidang.</p></div></section>
@@ -12,5 +48,6 @@
       </div>
     </div>
   {% endfor %}
+>>>>>>> origin/main
 </section>
 {% endblock %}

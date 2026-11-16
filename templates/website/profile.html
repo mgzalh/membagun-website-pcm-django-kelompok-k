@@ -4,14 +4,59 @@
 <section class="page-hero"><div class="container"><p class="eyebrow">Mengenal persyarikatan</p><h1>Profil PCM Kottabarat</h1><p>Informasi organisasi yang telah dipublikasikan dan diverifikasi.</p></div></section>
 <section class="container content-layout">
   <article class="prose">
+<<<<<<< HEAD
+    <h2>Informasi umum</h2>
+    {% if profile %}
+      <dl class="profile-facts">
+        <div><dt>Nama organisasi</dt><dd>{{ profile.name }}</dd></div>
+        <div><dt>Nama singkat</dt><dd>{{ profile.short_name }}</dd></div>
+        {% if profile.tagline %}<div><dt>Tagline</dt><dd>{{ profile.tagline }}</dd></div>{% endif %}
+      </dl>
+      <p class="profile-about">{% if profile.about %}{{ profile.about }}{% else %}Informasi profil belum tersedia. Silakan hubungi pengurus untuk melengkapi data yang terverifikasi.{% endif %}</p>
+    {% else %}<p>Informasi profil belum tersedia. Silakan hubungi pengurus untuk melengkapi data yang terverifikasi.</p>{% endif %}
+    <h2 class="profile-section-title">Sejarah</h2>
+    {% if profile and profile.history %}
+      <div class="history-content">
+        {% for block in profile.history_blocks %}
+          {% if block.kind == "paragraph" %}
+            <p class="history-intro">{{ block.text }}</p>
+          {% elif block.kind == "heading" %}
+            <h3 class="history-heading">{{ block.title }}</h3>
+          {% elif block.kind == "timeline" %}
+            <article class="history-entry">
+              <span class="history-year">{{ block.year }}</span>
+              <div><h4>{{ block.title }}</h4><p>{{ block.description }}</p></div>
+            </article>
+          {% elif block.kind == "summary" %}
+            <aside class="history-summary"><h3>{{ block.title }}</h3><p>{{ block.text }}</p></aside>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}<p>Informasi sejarah belum tersedia.</p>{% endif %}
+    <h2 class="profile-section-title">Visi</h2><p>{% if profile and profile.vision %}{{ profile.vision|linebreaksbr }}{% else %}Informasi visi belum tersedia.{% endif %}</p>
+    <h2 class="profile-section-title">Misi</h2>
+=======
     <h2>Tentang</h2><p>{% if profile and profile.about %}{{ profile.about|linebreaksbr }}{% else %}Informasi profil belum tersedia. Silakan hubungi pengurus untuk melengkapi data yang terverifikasi.{% endif %}</p>
     <h2>Sejarah</h2><p>{% if profile and profile.history %}{{ profile.history|linebreaksbr }}{% else %}Informasi sejarah belum tersedia.{% endif %}</p>
     <h2>Visi</h2><p>{% if profile and profile.vision %}{{ profile.vision|linebreaksbr }}{% else %}Informasi visi belum tersedia.{% endif %}</p>
     <h2>Misi</h2>
+>>>>>>> origin/main
     {% if profile and profile.missions %}
       <ol>{% for mission in profile.mission_list %}<li>{{ mission }}</li>{% endfor %}</ol>
     {% else %}<p>Informasi misi belum tersedia.</p>{% endif %}
   </article>
+<<<<<<< HEAD
+  <aside>
+    <section class="contact-card">
+      <h2>Kontak sekretariat</h2>
+      <p><strong>Alamat:</strong><br>{% if profile and profile.office_address %}{{ profile.office_address|linebreaksbr }}{% else %}Belum tersedia.{% endif %}</p>
+      <p><strong>Telepon:</strong><br>{% if profile and profile.official_phone %}{{ profile.official_phone }}{% else %}Belum tersedia.{% endif %}</p>
+      <p><strong>Email:</strong><br>{% if profile and profile.official_email %}<a href="mailto:{{ profile.official_email }}">{{ profile.official_email }}</a>{% else %}Belum tersedia.{% endif %}</p>
+    </section>
+    <section class="notice-card"><span class="notice-icon" aria-hidden="true">i</span><h2>Data terverifikasi</h2><p>Informasi yang belum tersedia tidak diisi dengan perkiraan. Data organisasi dapat diperbarui pengurus melalui panel admin.</p></section>
+  </aside>
+=======
   <aside class="notice-card"><span class="notice-icon" aria-hidden="true">i</span><h2>Data terverifikasi</h2><p>Informasi yang belum tersedia tidak diisi dengan perkiraan. Data organisasi dapat diperbarui pengurus melalui panel admin.</p></aside>
+>>>>>>> origin/main
 </section>
 {% endblock %}

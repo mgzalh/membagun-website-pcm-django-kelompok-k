@@ -1,5 +1,25 @@
 {% extends "website/base.html" %}
 {% load static %}
+<<<<<<< HEAD
+{% block title %}Pimpinan | PCM Kottabarat{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow">Penggerak persyarikatan</p><h1>Pimpinan</h1><p>Susunan pimpinan PCM Kottabarat.</p></div></section>
+<section class="section container">
+  {% regroup leaders by section as leader_sections %}
+  {% for group in leader_sections %}
+    <section class="leader-section">
+      <div class="section-heading"><h2>{{ group.grouper }}</h2><span class="count-label">{{ group.list|length }} orang</span></div>
+      <div class="people-grid">
+        {% for leader in group.list %}
+          <article class="person-card">
+            {% if leader.photo %}<img src="{{ leader.photo.url }}" alt="Foto {{ leader.name }}">{% else %}<div class="person-placeholder" aria-hidden="true">{{ leader.name|first }}</div>{% endif %}
+            <div><h3>{{ leader.position }}</h3><p>{{ leader.name }}</p><small>{% if leader.period %}Periode {{ leader.period }}{% else %}Periode tidak dicantumkan dalam sumber.{% endif %}</small>{% if leader.photo_credit %}<small class="photo-credit">{{ leader.photo_credit }}</small>{% endif %}</div>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+  {% empty %}<p class="empty-state">Data pimpinan belum tersedia. Nama dan periode akan ditampilkan setelah dikonfirmasi dari sumber resmi.</p>{% endfor %}
+=======
 {% block title %}Struktur Pimpinan | PCM Kottabarat{% endblock %}
 
 {% block content %}
@@ -137,5 +157,6 @@
     {% endif %}
 
   </div>
+>>>>>>> origin/main
 </section>
 {% endblock %}
