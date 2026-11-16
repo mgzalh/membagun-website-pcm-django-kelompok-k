@@ -71,6 +71,9 @@ h3 { font-size: 1.2rem; }
 .button-primary { color: white; background: var(--green); }
 .button-outline { border: 1px solid var(--green); color: var(--green); background: white; }
 .hero-art { position: relative; display: grid; min-height: 280px; place-items: center; }
+.hero-tokoh-figure { position: relative; z-index: 2; margin: 0 auto; width: min(500px, 100%); border-radius: 20px; overflow: hidden; box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(4px); opacity: 0.5; transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; }
+.hero-tokoh-figure:hover { opacity: 0.85; transform: translateY(-3px); box-shadow: 0 20px 42px rgba(0, 0, 0, 0.4); }
+.hero-tokoh-img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
 .hero-mark { position: relative; z-index: 1; display: flex; width: min(270px, 70vw); height: 270px; align-items: center; justify-content: center; flex-direction: column; gap: .75rem; border: 1px solid rgb(255 255 255 / 38%); border-radius: 50%; background: rgb(255 255 255 / 10%); backdrop-filter: blur(2px); text-align: center; font: 700 1.1rem "Segoe UI", Arial, sans-serif; }
 .hero-mark img { width: 90px; height: 110px; object-fit: contain; padding: .45rem; border-radius: 12px; background: #fff; }
 .hero-photo { position: relative; z-index: 1; width: min(360px, 80vw); height: 300px; border-radius: 48% 48% 18px 18px; object-fit: cover; }

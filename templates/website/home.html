@@ -18,10 +18,9 @@
           {% if profile.hero_image_credit %}<figcaption>{{ profile.hero_image_credit }}</figcaption>{% endif %}
         </figure>
       {% else %}
-        <div class="hero-mark" aria-hidden="true">
-          <img src="{% static 'website/muhammadiyah.svg' %}" alt="">
-          <span>Kottabarat<br>Surakarta</span>
-        </div>
+        <figure class="hero-tokoh-figure">
+          <img class="hero-tokoh-img" src="{% static 'website/img/tokoh_muhammadiyah_hero.jpg' %}" alt="Tokoh Muhammadiyah: K.H. Ahmad Dahlan, Nyai Walidah Dahlan, dan Lambang Muhammadiyah">
+        </figure>
       {% endif %}
       <span class="hero-orbit orbit-one"></span><span class="hero-orbit orbit-two"></span>
     </div>
