@@ -110,6 +110,8 @@ h3 { font-size: 1.2rem; }
 .page-hero { padding-block: 3.8rem; color: white; background: linear-gradient(115deg, #073e31, #0c6b4d); }
 .page-hero h1 { margin: .25rem 0 .5rem; font-size: clamp(2.2rem, 4vw, 3.5rem); }
 .page-hero p:last-child { margin: 0; color: #e1eee8; }
+.page-hero .text-center { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.page-hero .hero-desc { max-width: 700px; margin: 0.5rem auto 0 !important; text-align: center; color: #e1eee8 !important; font-size: 1.1rem; }
 .content-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(230px, .7fr); gap: 3rem; padding-block: 4rem; }
 .prose { max-width: 760px; }
 .prose h2 { margin-top: 2rem; }
@@ -212,7 +214,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
    STRUKTUR SILSILAH / ORGANIZATIONAL TREE STYLES
    ========================================================== */
 .text-center { text-align: center; }
-.hero-desc { max-width: 650px; margin: 0.5rem auto 0; color: var(--muted); font-size: 1.05rem; }
+.hero-desc { max-width: 700px; margin: 0.5rem auto 0 !important; text-align: center; color: #e1eee8 !important; font-size: 1.1rem; }
 
 .org-tree-wrapper {
   display: flex;
