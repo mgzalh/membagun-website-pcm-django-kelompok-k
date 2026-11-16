@@ -29,9 +29,9 @@
 </section>
 
 <section class="container stats" aria-label="Ringkasan organisasi">
-  <div class="stat-card"><strong>{% if branch_count %}{{ branch_count }}{% else %}—{% endif %}</strong><span>Ranting terdata</span></div>
-  <div class="stat-card"><strong>{% if charity_count %}{{ charity_count }}{% else %}—{% endif %}</strong><span>Amal usaha terdata</span></div>
-  <div class="stat-card"><strong>{% if profile and profile.ktam_members %}{{ profile.ktam_members }}{% else %}—{% endif %}</strong><span>Anggota ber-KTAM</span></div>
+  <div class="stat-card"><strong>{% if branch_count %}{{ branch_count }}{% else %}-{% endif %}</strong><span>Ranting terdata</span></div>
+  <div class="stat-card"><strong>{% if charity_count %}{{ charity_count }}{% else %}-{% endif %}</strong><span>Amal usaha terdata</span></div>
+  <div class="stat-card"><strong>{% if profile and profile.ktam_members %}{{ profile.ktam_members }}{% else %}-{% endif %}</strong><span>Anggota ber-KTAM</span></div>
 </section>
 
 <section class="section container">

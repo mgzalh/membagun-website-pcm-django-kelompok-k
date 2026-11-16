@@ -23,7 +23,7 @@ class Command(BaseCommand):
             "Pimpinan Cabang Muhammadiyah (PCM) Kottabarat merupakan struktur persyarikatan "
             "di bawah PDM Kota Surakarta yang mengelola dakwah, pendidikan unggulan, dan layanan kemasyarakatan."
         )
-        prof.ktam_members = 385
+        prof.ktam_members = None
         prof.save()
 
         # Pimpinan Resmi (2022 - 2027)
