@@ -3,6 +3,10 @@
 {% block title %}Beranda | PCM Kottabarat{% endblock %}
 {% block content %}
 <section class="hero">
+  <div class="hero-bg-wrapper" aria-hidden="true">
+    <img class="hero-bg-tokoh" src="{% static 'website/img/tokoh_muhammadiyah_hero.jpg' %}" alt="">
+    <div class="hero-bg-overlay"></div>
+  </div>
   <div class="container hero-grid">
     <div class="hero-copy">
       <p class="eyebrow">Pimpinan Cabang Muhammadiyah · Surakarta</p>
@@ -17,12 +21,7 @@
           <img class="hero-photo" src="{{ profile.hero_image.url }}" alt="Foto utama PCM Kottabarat">
           {% if profile.hero_image_credit %}<figcaption>{{ profile.hero_image_credit }}</figcaption>{% endif %}
         </figure>
-      {% else %}
-        <figure class="hero-tokoh-figure">
-          <img class="hero-tokoh-img" src="{% static 'website/img/tokoh_muhammadiyah_hero.jpg' %}" alt="Tokoh Muhammadiyah: K.H. Ahmad Dahlan, Nyai Walidah Dahlan, dan Lambang Muhammadiyah">
-        </figure>
       {% endif %}
-      <span class="hero-orbit orbit-one"></span><span class="hero-orbit orbit-two"></span>
     </div>
   </div>
 </section>
