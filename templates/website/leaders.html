@@ -15,228 +15,126 @@
   <div class="org-tree-wrapper">
     
     <!-- LEVEL 1: PENASEHAT -->
+    {% if advisors %}
     <div class="tree-level">
       <div class="tree-section-tag advisor-tag">Dewan Penasehat Cabang</div>
       <div class="tree-row advisor-row">
+        {% for leader in advisors %}
         <div class="tree-card advisor-card">
-          <div class="card-role">Penasehat 1</div>
-          <div class="card-name">Drs. H. Marpuji Ali, M.Si.</div>
-          <div class="card-period">Periode 2022 – 2027</div>
+          {% if leader.photo %}<img class="tree-avatar" src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+          <div class="card-role">{{ leader.position }}</div>
+          <div class="card-name">{{ leader.name }}</div>
+          {% if leader.period %}<div class="card-period">Periode {{ leader.period }}</div>{% endif %}
         </div>
-        <div class="tree-card advisor-card">
-          <div class="card-role">Penasehat 2</div>
-          <div class="card-name">H. Sjamsuddin Dahlan</div>
-          <div class="card-period">Periode 2022 – 2027</div>
-        </div>
-        <div class="tree-card advisor-card">
-          <div class="card-role">Penasehat 3</div>
-          <div class="card-name">Dr. Muhammad Ali, M.Pd</div>
-          <div class="card-period">Periode 2022 – 2027</div>
-        </div>
+        {% endfor %}
       </div>
       <div class="tree-stem"></div>
     </div>
+    {% endif %}
 
     <!-- LEVEL 2: KETUA CABANG -->
+    {% if chiefs %}
     <div class="tree-level">
       <div class="tree-section-tag chief-tag">Pucuk Pimpinan Cabang</div>
       <div class="tree-row">
+        {% for leader in chiefs %}
         <div class="tree-card chief-card">
           <div class="chief-emblem" aria-hidden="true">★</div>
-          <div class="card-role chief-badge">Ketua Cabang</div>
-          <div class="card-name chief-name">Joko Susilo, S.TP., S.Pd.I., M.Pd</div>
-          <div class="card-period chief-period">Pimpinan Cabang Muhammadiyah Kottabarat 2022 – 2027</div>
+          {% if leader.photo %}<img class="tree-avatar-chief" src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+          <div class="card-role chief-badge">{{ leader.position }}</div>
+          <div class="card-name chief-name">{{ leader.name }}</div>
+          <div class="card-period chief-period">Pimpinan Cabang Muhammadiyah Kottabarat {% if leader.period %}{{ leader.period }}{% endif %}</div>
         </div>
+        {% endfor %}
       </div>
       <div class="tree-stem"></div>
     </div>
+    {% endif %}
 
     <!-- LEVEL 3: WAKIL KETUA -->
+    {% if vices %}
     <div class="tree-level">
       <div class="tree-section-tag">Wakil Pimpinan Cabang</div>
       <div class="tree-row branch-row">
+        {% for leader in vices %}
         <div class="tree-card vice-card">
-          <div class="card-role">Wakil Ketua I</div>
-          <div class="card-name">Saifudin, SP</div>
-          <div class="card-scope">Koordinator Bidang: Tabligh, Tarjih, Ekonomi</div>
-          <div class="card-period">2022 – 2027</div>
+          {% if leader.photo %}<img class="tree-avatar" src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+          <div class="card-role">{{ leader.position }}</div>
+          <div class="card-name">{{ leader.name }}</div>
+          {% if leader.scope %}<div class="card-scope">{{ leader.scope }}</div>{% endif %}
+          {% if leader.period %}<div class="card-period">{{ leader.period }}</div>{% endif %}
         </div>
-        <div class="tree-card vice-card">
-          <div class="card-role">Wakil Ketua II</div>
-          <div class="card-name">H. Kartono, S.Pd., M.Pd</div>
-          <div class="card-scope">Koordinator Bidang: Dikdasmen, Kader, Kesos</div>
-          <div class="card-period">2022 – 2027</div>
-        </div>
+        {% endfor %}
       </div>
       <div class="tree-stem"></div>
     </div>
+    {% endif %}
 
     <!-- LEVEL 4: SEKRETARIAT & KEBENDAHARAAN -->
+    {% if officers %}
     <div class="tree-level">
       <div class="tree-section-tag">Sekretariat & Kebendaharaan</div>
       <div class="tree-row branch-row quad-row">
+        {% for leader in officers %}
         <div class="tree-card officer-card">
-          <div class="card-role">Sekretaris</div>
-          <div class="card-name">Retno Sugiyanto, S.Pd</div>
-          <div class="card-period">2022 – 2027</div>
+          {% if leader.photo %}<img class="tree-avatar" src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+          <div class="card-role">{{ leader.position }}</div>
+          <div class="card-name">{{ leader.name }}</div>
+          {% if leader.scope %}<div class="card-scope">{{ leader.scope }}</div>{% endif %}
+          {% if leader.period %}<div class="card-period">{{ leader.period }}</div>{% endif %}
         </div>
-        <div class="tree-card officer-card">
-          <div class="card-role">Wakil Sekretaris</div>
-          <div class="card-name">Muhdiyatmoko, S.Pd., M.Pd</div>
-          <div class="card-period">2022 – 2027</div>
-        </div>
-        <div class="tree-card officer-card">
-          <div class="card-role">Bendahara</div>
-          <div class="card-name">Mukseto</div>
-          <div class="card-period">2022 – 2027</div>
-        </div>
-        <div class="tree-card officer-card">
-          <div class="card-role">Wakil Bendahara</div>
-          <div class="card-name">Yusuf Aris Kurniawan, S.Pi</div>
-          <div class="card-period">2022 – 2027</div>
-        </div>
+        {% endfor %}
       </div>
       <div class="tree-stem"></div>
     </div>
+    {% endif %}
 
     <!-- LEVEL 5: ANGGOTA PLENO -->
+    {% if plenos %}
     <div class="tree-level">
       <div class="tree-section-tag">Anggota Pleno Pimpinan Cabang</div>
       <div class="tree-row branch-row duo-row">
+        {% for leader in plenos %}
         <div class="tree-card member-card">
-          <div class="card-role">Anggota Pleno</div>
-          <div class="card-name">H. Suwardi, S.Ag, M.Si</div>
-          <div class="card-period">2022 – 2027</div>
+          {% if leader.photo %}<img class="tree-avatar" src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+          <div class="card-role">{{ leader.position }}</div>
+          <div class="card-name">{{ leader.name }}</div>
+          {% if leader.period %}<div class="card-period">{{ leader.period }}</div>{% endif %}
         </div>
-        <div class="tree-card member-card">
-          <div class="card-role">Anggota Pleno</div>
-          <div class="card-name">Lasur Suryadi</div>
-          <div class="card-period">2022 – 2027</div>
-        </div>
+        {% endfor %}
       </div>
       <div class="tree-stem"></div>
     </div>
+    {% endif %}
 
-    <!-- LEVEL 6: UNSUR PEMBANTU PIMPINAN (MAJELIS-MAJELIS) -->
+    <!-- LEVEL 6: MAJELIS & LEMBAGA -->
+    {% if councils %}
     <div class="tree-level full-width">
       <div class="tree-section-tag majelis-header-tag">Unsur Pembantu Pimpinan (Majelis & Lembaga Cabang)</div>
       <div class="majelis-grid">
-        
-        <!-- Majelis Dikdasmen -->
+        {% for council in councils %}
         <div class="majelis-box">
-          <div class="majelis-badge">Majelis Dikdasmen</div>
-          <div class="majelis-spv"><strong>Supervisor:</strong> Muhdiyatmoko, S.Pd., M.Pd</div>
+          <div class="majelis-badge">{{ council.name }}</div>
+          {% if council.supervisor %}<div class="majelis-spv"><strong>Supervisor:</strong> {{ council.supervisor }}</div>{% endif %}
           <div class="majelis-lead">
             <span class="role-pill">Ketua Majelis</span>
-            <strong>Nur Salam, S.Fil, M.Pd</strong>
+            <strong>{{ council.chairperson }}</strong>
           </div>
+          {% if council.member_list %}
           <div class="majelis-members">
             <span class="members-label">Anggota:</span>
             <ul>
-              <li>Triad Suparman, S.Pd, M.Pd</li>
-              <li>Joko Suyatno, S.Pd</li>
-              <li>Heru Hadiyono, S.Pd., S.Kom.</li>
+              {% for member in council.member_list %}
+              <li>{{ member }}</li>
+              {% endfor %}
             </ul>
           </div>
+          {% endif %}
         </div>
-
-        <!-- Majelis Tabligh -->
-        <div class="majelis-box">
-          <div class="majelis-badge">Majelis Tabligh</div>
-          <div class="majelis-spv"><strong>Supervisor:</strong> Retno Sugiyanto, S.Pd</div>
-          <div class="majelis-lead">
-            <span class="role-pill">Ketua Majelis</span>
-            <strong>Purmoko, S.Kom</strong>
-          </div>
-          <div class="majelis-members">
-            <span class="members-label">Anggota:</span>
-            <ul>
-              <li>Supangat, S.Ag</li>
-              <li>Noor Widodo</li>
-              <li>Chairul Anwar, S.T</li>
-              <li>Edi Sumarno, S.Sos</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Majelis Ekonomi -->
-        <div class="majelis-box">
-          <div class="majelis-badge">Majelis Ekonomi</div>
-          <div class="majelis-spv"><strong>Supervisor:</strong> Saifudin, SP</div>
-          <div class="majelis-lead">
-            <span class="role-pill">Ketua Majelis</span>
-            <strong>Wagino Hadi Pranoto</strong>
-          </div>
-          <div class="majelis-members">
-            <span class="members-label">Anggota:</span>
-            <ul>
-              <li>Ir. Kamaludin Gimo, HS</li>
-              <li>H. Suparman</li>
-              <li>Ali Mansur, S.Ag</li>
-              <li>Drs. Mudzakir</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Majelis Wakaf -->
-        <div class="majelis-box">
-          <div class="majelis-badge">Majelis Wakaf</div>
-          <div class="majelis-spv"><strong>Supervisor:</strong> H. Suwardi, S.Ag, M.Si</div>
-          <div class="majelis-lead">
-            <span class="role-pill">Ketua Majelis</span>
-            <strong>Lasur Suryadi</strong>
-          </div>
-          <div class="majelis-members">
-            <span class="members-label">Anggota:</span>
-            <ul>
-              <li>Sunarwo, Bc.Hk</li>
-              <li>H. Ma'ruf Jagaf, S.H</li>
-              <li>Kambali</li>
-              <li>Ir. Suryo Agung</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Majelis Kader -->
-        <div class="majelis-box">
-          <div class="majelis-badge">Majelis Kader</div>
-          <div class="majelis-spv"><strong>Supervisor:</strong> H. Kartono, M.Pd</div>
-          <div class="majelis-lead">
-            <span class="role-pill">Ketua Majelis</span>
-            <strong>Hendro Susilo, S.Pd</strong>
-          </div>
-          <div class="majelis-members">
-            <span class="members-label">Anggota:</span>
-            <ul>
-              <li>Endri Susanto, S.E</li>
-              <li>Suyanto, SH., MH.</li>
-              <li>Triyono</li>
-              <li>Rachmad Eka Saputra</li>
-              <li>Syahrudi</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Majelis Kesos & LAZISMU -->
-        <div class="majelis-box">
-          <div class="majelis-badge">Majelis Kesejahteraan Sosial & LAZISMU</div>
-          <div class="majelis-spv"><strong>Supervisor:</strong> Yusuf Aris Kurniawan, S.Pi</div>
-          <div class="majelis-lead">
-            <span class="role-pill">Ketua Majelis</span>
-            <strong>H. Kusnan, S.Pd</strong>
-          </div>
-          <div class="majelis-members">
-            <span class="members-label">Anggota:</span>
-            <ul>
-              <li>H. Suparno, S.T, M.T</li>
-              <li>Budi Saptono</li>
-              <li>Suyatno</li>
-            </ul>
-          </div>
-        </div>
-
+        {% endfor %}
       </div>
     </div>
+    {% endif %}
 
   </div>
 </section>
