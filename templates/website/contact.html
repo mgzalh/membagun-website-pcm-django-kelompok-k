@@ -1,26 +1,43 @@
 {% extends "website/base.html" %}
 {% block title %}Kontak | PCM Kottabarat{% endblock %}
 {% block content %}
-<section class="page-hero"><div class="container"><p class="eyebrow">Kami siap mendengar</p><h1>Kontak</h1><p>Kirim pertanyaan atau pesan kepada PCM Kottabarat.</p></div></section>
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">Kami siap mendengar</p>
+    <h1>Kontak</h1>
+    <p>Kirim pertanyaan atau pesan kepada PCM Kottabarat.</p>
+  </div>
+</section>
+
 <section class="container contact-layout section">
-  <aside class="contact-card"><h2>Sekretariat</h2>
-    <p>{% if profile and profile.office_address %}{{ profile.office_address|linebreaksbr }}{% else %}Alamat sekretariat belum tersedia.{% endif %}</p>
-    {% if profile and profile.official_phone %}<p><strong>Telepon</strong><br>{{ profile.official_phone }}</p>{% endif %}
-    {% if profile and profile.official_email %}<p><strong>Email</strong><br><a href="mailto:{{ profile.official_email }}">{{ profile.official_email }}</a></p>{% endif %}
-    <p class="privacy-note">Jangan kirim data pribadi sensitif melalui formulir ini.</p>
+  <aside class="contact-card">
+    <h2>Sekretariat</h2>
+
+    <p>Jl. Dr. Moewardi No. 24, Surakarta, Jawa Tengah.</p>
+
+    <p class="privacy-note">
+      Kami menghargai privasi Anda. Mohon tidak mencantumkan informasi pribadi
+      atau data rahasia dalam pesan yang dikirimkan melalui formulir ini.
+    </p>
   </aside>
+
   <form class="contact-form" method="post">
-    {% csrf_token %}
-    {% for field in form %}
-      <div class="form-field">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {{ field }}
-        {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
-        {% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
-      </div>
+    {% csrf_token %} {% for field in form %}
+    <div class="form-field">
+      <label for="{{ field.id_for_label }}"> {{ field.label }} </label>
+
+      {{ field }} {% if field.help_text %}
+      <small>{{ field.help_text }}</small>
+      {% endif %} {% for error in field.errors %}
+      <small class="field-error">{{ error }}</small>
+      {% endfor %}
+    </div>
+    {% endfor %} {% for error in form.non_field_errors %}
+    <p class="field-error">{{ error }}</p>
     {% endfor %}
-    {% for error in form.non_field_errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+
     <button class="button button-primary" type="submit">Kirim pesan</button>
   </form>
 </section>
+
 {% endblock %}
