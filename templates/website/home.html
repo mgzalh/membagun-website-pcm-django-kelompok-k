@@ -8,6 +8,7 @@
       <p class="eyebrow">Pimpinan Cabang Muhammadiyah · Surakarta</p>
       <h1>{% if profile %}{{ profile.name }}{% else %}PCM Kottabarat{% endif %}</h1>
       <p class="hero-lead">{% if profile and profile.tagline %}{{ profile.tagline }}{% else %}Ruang informasi kegiatan, kabar, dan layanan Persyarikatan di Kottabarat.{% endif %}</p>
+      {% if profile and profile.about %}<p class="hero-description">{{ profile.about|linebreaksbr }}</p>{% endif %}
       <a class="button button-light" href="{% url 'website:profile' %}">Kenali PCM Kottabarat</a>
     </div>
     <div class="hero-art">

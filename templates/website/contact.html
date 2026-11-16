@@ -13,7 +13,9 @@
   <aside class="contact-card">
     <h2>Sekretariat</h2>
 
-    <p>Jl. Dr. Moewardi No. 24, Surakarta, Jawa Tengah.</p>
+    <p>{% if profile and profile.office_address %}{{ profile.office_address|linebreaksbr }}{% else %}Alamat sekretariat belum tersedia.{% endif %}</p>
+    {% if profile and profile.official_phone %}<p>Telepon: {{ profile.official_phone }}</p>{% endif %}
+    {% if profile and profile.official_email %}<p>Email: <a href="mailto:{{ profile.official_email }}">{{ profile.official_email }}</a></p>{% endif %}
 
     <p class="privacy-note">
       Kami menghargai privasi Anda. Mohon tidak mencantumkan informasi pribadi
