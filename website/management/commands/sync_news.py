@@ -2,7 +2,7 @@ import re
 import urllib.request
 from datetime import datetime
 from html import unescape
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
@@ -13,14 +13,14 @@ from website.models import Article
 
 
 class Command(BaseCommand):
-    help = "Sinkronisasi berita terbaru seputar Kottabarat dari portal muhammadiyahsolo.com"
+    help = "Sinkronisasi berita terbaru seputar Kottabarat dari portal muhammadiyahsolo.com beserta foto aslinya."
 
     def add_arguments(self, parser):
         parser.add_argument(
             "--limit",
             type=int,
-            default=8,
-            help="Jumlah maksimal artikel yang diambil (default: 8)",
+            default=6,
+            help="Jumlah maksimal artikel yang diambil (default: 6)",
         )
 
     def handle(self, *args, **options):
@@ -37,44 +37,36 @@ class Command(BaseCommand):
             self.stderr.write(self.style.ERROR(f"Gagal mengakses portal: {e}"))
             return
 
-        pattern = re.compile(
+        # Ambil artikel dari kartu hasil pencarian
+        cards = re.findall(
             r'<a[^>]+href="(?P<url>https://muhammadiyahsolo\.com/(?P<date>\d{8})/[^"]+)"[^>]*>'
-            r'[\s\S]*?<h2 class="card-title[^"]*">(?P<title>[\s\S]*?)</h2>[\s\S]*?</a>'
-            r'[\s\S]*?<p class="card-text[^"]*">(?P<summary>[\s\S]*?)</p>',
-            re.IGNORECASE,
+            r'\s*<h2 class="card-title[^"]*">(?P<title>.*?)</h2>\s*</a>',
+            html,
+            re.DOTALL,
         )
 
-        matches = list(pattern.finditer(html))
-        self.stdout.write(f"Ditemukan {len(matches)} artikel terkait Kottabarat.")
+        self.stdout.write(f"Ditemukan {len(cards)} artikel terkait Kottabarat.")
 
         count = 0
-        for m in matches[:limit]:
-            art_url = m.group("url")
-            date_str = m.group("date")
-            title = unescape(re.sub(r"<[^>]+>", "", m.group("title")).strip())
-            summary = unescape(re.sub(r"<[^>]+>", "", m.group("summary")).strip())
+        for art_url, date_str, raw_title in cards[:limit]:
+            title = unescape(re.sub(r"<[^>]+>", "", raw_title)).strip()
 
-            # Parse tanggal
+            # Parse tanggal publikasi
             try:
                 pub_date = datetime.strptime(date_str, "%Y%m%d")
                 pub_aware = timezone.make_aware(pub_date.replace(hour=8, minute=0))
             except Exception:
                 pub_aware = timezone.now()
 
-            # Buat slug dari judul
-            base_slug = slugify(title)[:200] or f"berita-{date_str}"
+            self.stdout.write(f"\nMemproses: {title[:55]}...")
 
-            self.stdout.write(f"Mengunduh detail: {title[:50]}...")
+            # Ambil detail halaman artikel untuk isi lengkap dan foto asli
+            summary, body_text, img_url = self._fetch_article_detail(art_url, headers)
 
-            # Ambil detail halaman artikel untuk gambar & isi lengkap
-            body_text, img_url = self._fetch_article_detail(art_url, headers)
-            if not body_text:
-                body_text = summary
-
-            # Cari atau buat artikel
+            # Cek artikel di database
             article = Article.objects.filter(source_url=art_url).first()
             if not article:
-                # Cek slug bentrok
+                base_slug = slugify(title)[:200] or f"berita-{date_str}"
                 slug = base_slug
                 idx = 1
                 while Article.objects.filter(slug=slug).exists():
@@ -89,7 +81,7 @@ class Command(BaseCommand):
                     status=Article.Status.PUBLISHED,
                     source_name="Muhammadiyah Solo",
                     source_url=art_url,
-                    cover_credit="Dokumentasi Muhammadiyah Solo",
+                    cover_credit="Dokumentasi Humas / Muhammadiyah Solo",
                 )
             else:
                 article.title = title
@@ -98,19 +90,24 @@ class Command(BaseCommand):
                 article.published_at = pub_aware
                 article.status = Article.Status.PUBLISHED
 
-            # Download cover image jika tersedia dan belum punya cover
-            if img_url and not article.cover:
+            # Download foto asli jika ada
+            if img_url:
+                self.stdout.write(f"  Mengunduh foto: {img_url}...")
                 img_data, img_filename = self._download_image(img_url, headers)
                 if img_data:
+                    # Simpan foto asli sebagai cover
                     article.cover.save(img_filename, ContentFile(img_data), save=False)
+                    self.stdout.write(self.style.SUCCESS(f"  [Foto OK] {img_filename}"))
+                else:
+                    self.stdout.write(self.style.WARNING("  [Foto Gagal diunduh]"))
 
             article.save()
             count += 1
-            self.stdout.write(self.style.SUCCESS(f"  [OK] Tersimpan: {title[:60]}"))
+            self.stdout.write(self.style.SUCCESS(f"  [Berita Tersimpan] ID: {article.pk}"))
 
         self.stdout.write(
             self.style.SUCCESS(
-                f"\nBerhasil menyinkronkan {count} berita resmi dari muhammadiyahsolo.com!"
+                f"\nBerhasil menyinkronkan {count} berita + FOTO ASLI dari muhammadiyahsolo.com!"
             )
         )
 
@@ -120,41 +117,51 @@ class Command(BaseCommand):
             with urllib.request.urlopen(req, timeout=12) as resp:
                 html = resp.read().decode("utf-8", errors="ignore")
 
-            # Cari gambar utama di /files/
-            # Utamakan gambar ukuran besar/sedang (bukan thumbnail 150x100 atau logo)
-            img_candidates = re.findall(
-                r'https://muhammadiyahsolo\.com/files/\d{4}/\d{2}/[^"\'\s>]+\.(?:jpg|jpeg|png|webp)',
+            # 1. Cari foto asli dari og:image (socmed-image.php?src=...)
+            og_match = re.search(
+                r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']',
                 html,
                 re.I,
             )
             img_url = None
-            for cand in img_candidates:
-                if "logo" not in cand.lower() and "150x100" not in cand and "370x" not in cand:
-                    img_url = cand
-                    break
-            if not img_url and img_candidates:
-                for cand in img_candidates:
-                    if "logo" not in cand.lower():
-                        img_url = cand
+            if og_match:
+                og_content = og_match.group(1)
+                src_match = re.search(r'src=([^&"\']+)', og_content)
+                if src_match:
+                    img_url = unquote(src_match.group(1))
+                elif "favicon" not in og_content and "logo" not in og_content and "default.jpg" not in og_content:
+                    img_url = og_content
+
+            # Jika og:image tidak dapat, cari dari tag img di dalam artikel
+            if not img_url:
+                imgs = re.findall(
+                    r'https://muhammadiyahsolo\.com/files/\d{4}/\d{2}/[^"\'\s>]+\.(?:jpg|jpeg|png|webp)',
+                    html,
+                    re.I,
+                )
+                for im in imgs:
+                    if "logo" not in im.lower() and "150x100" not in im:
+                        img_url = im
                         break
 
-            # Cari paragraf konten
+            # 2. Cari paragraf konten
             paras = re.findall(r'<p[^>]*>([\s\S]*?)</p>', html)
             clean_paras = []
             for p in paras:
-                text = unescape(re.sub(r'<[^>]+>', '', p).strip())
+                text = unescape(re.sub(r"<[^>]+>", "", p).strip())
                 if len(text) > 40 and not text.startswith("Baca juga") and not text.startswith("Editor:"):
                     clean_paras.append(text)
 
-            body_text = "\n\n".join(clean_paras[:10])
-            return body_text, img_url
-        except Exception:
-            return "", None
+            summary = clean_paras[0] if clean_paras else ""
+            body_text = "\n\n".join(clean_paras)
+            return summary, body_text, img_url
+        except Exception as e:
+            return "", "", None
 
     def _download_image(self, url, headers):
         try:
             req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=10) as resp:
+            with urllib.request.urlopen(req, timeout=12) as resp:
                 data = resp.read()
                 path = urlparse(url).path
                 filename = path.split("/")[-1]
