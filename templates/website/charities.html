@@ -1,4 +1,5 @@
 {% extends "website/base.html" %}
+<<<<<<< HEAD
 {% load static %}
 {% block title %}Amal Usaha | PCM Kottabarat{% endblock %}
 {% block content %}
@@ -33,5 +34,20 @@
   {% else %}
     <p class="empty-state">Data lembaga pendidikan belum tersedia.</p>
   {% endif %}
+=======
+{% block title %}Amal Usaha | PCM Kottabarat{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow">Layanan persyarikatan</p><h1>Amal Usaha Muhammadiyah</h1><p>Daftar amal usaha dikelompokkan berdasarkan bidang.</p></div></section>
+<section class="section container">
+  {% for label, items in grouped_charities %}
+    <div class="group-section"><div class="section-heading"><h2>{{ label }}</h2><span class="count-label">{% if items %}{{ items|length }} terdata{% else %}Data belum tersedia{% endif %}</span></div>
+      <div class="card-grid">
+        {% for charity in items %}
+          <article class="simple-card">{% if charity.image %}<img src="{{ charity.image.url }}" alt="">{% if charity.image_credit %}<small class="photo-credit">{{ charity.image_credit }}</small>{% endif %}{% endif %}<div><h3>{{ charity.name }}</h3><p>{{ charity.description|default:"Deskripsi belum tersedia." }}</p>{% if charity.address %}<small>{{ charity.address }}</small>{% endif %}</div></article>
+        {% empty %}<p class="empty-state">Data bidang {{ label|lower }} belum tersedia.</p>{% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+>>>>>>> origin/main
 </section>
 {% endblock %}

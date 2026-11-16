@@ -4,6 +4,7 @@ from .models import (
     Article,
     Branch,
     Charity,
+    Council,
     Document,
     Event,
     IncomingMessage,
@@ -19,7 +20,7 @@ admin.site.index_title = "Pengelolaan konten website"
 
 @admin.register(OrganizationProfile)
 class OrganizationProfileAdmin(admin.ModelAdmin):
-    list_display = ["name", "short_name", "official_email"]
+    list_display = ["name", "short_name", "official_email", "ktam_members"]
 
     def has_add_permission(self, request):
         return not OrganizationProfile.objects.exists()
@@ -30,9 +31,38 @@ class OrganizationProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Leader)
 class LeaderAdmin(admin.ModelAdmin):
-    list_display = ["name", "position", "period", "display_order"]
-    search_fields = ["name", "position"]
-    list_filter = ["period"]
+    list_display = ["name", "position", "tier", "period", "display_order"]
+    search_fields = ["name", "position", "scope"]
+    list_filter = ["tier", "period"]
+    list_editable = ["display_order", "tier"]
+    fieldsets = (
+        (
+            "Identitas Pimpinan",
+            {
+                "fields": ("name", "position", "tier", "period"),
+                "description": "Pilih Tingkat Hierarki Silsilah agar posisi di bagan otomatis tepat.",
+            },
+        ),
+        (
+            "Detail & Bidang",
+            {
+                "fields": ("scope", "display_order"),
+            },
+        ),
+        (
+            "Foto Profil (Opsional)",
+            {
+                "fields": ("photo", "photo_credit"),
+            },
+        ),
+    )
+
+
+@admin.register(Council)
+class CouncilAdmin(admin.ModelAdmin):
+    list_display = ["name", "chairperson", "supervisor", "display_order"]
+    search_fields = ["name", "chairperson", "supervisor", "members"]
+    list_editable = ["display_order"]
 
 
 @admin.register(Branch)

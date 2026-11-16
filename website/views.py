@@ -8,6 +8,7 @@ from .models import (
     Article,
     Branch,
     Charity,
+    Council,
     Document,
     Event,
     Leader,
@@ -32,7 +33,16 @@ def profile(request):
 
 
 def leaders(request):
-    return render(request, "website/leaders.html", {"leaders": Leader.objects.all()})
+    all_leaders = Leader.objects.all()
+    context = {
+        "advisors": all_leaders.filter(tier=Leader.Tier.ADVISOR),
+        "chiefs": all_leaders.filter(tier=Leader.Tier.CHIEF),
+        "vices": all_leaders.filter(tier=Leader.Tier.VICE),
+        "officers": all_leaders.filter(tier=Leader.Tier.OFFICER),
+        "plenos": all_leaders.filter(tier=Leader.Tier.PLENO),
+        "councils": Council.objects.all(),
+    }
+    return render(request, "website/leaders.html", context)
 
 
 def branches(request):

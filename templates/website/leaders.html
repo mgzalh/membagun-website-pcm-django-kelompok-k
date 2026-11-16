@@ -1,5 +1,6 @@
 {% extends "website/base.html" %}
 {% load static %}
+<<<<<<< HEAD
 {% block title %}Pimpinan | PCM Kottabarat{% endblock %}
 {% block content %}
 <section class="page-hero"><div class="container"><p class="eyebrow">Penggerak persyarikatan</p><h1>Pimpinan</h1><p>Susunan pimpinan PCM Kottabarat.</p></div></section>
@@ -18,5 +19,144 @@
       </div>
     </section>
   {% empty %}<p class="empty-state">Data pimpinan belum tersedia. Nama dan periode akan ditampilkan setelah dikonfirmasi dari sumber resmi.</p>{% endfor %}
+=======
+{% block title %}Struktur Pimpinan | PCM Kottabarat{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container text-center">
+    <p class="eyebrow">Bagan Silsilah & Hierarki Persyarikatan</p>
+    <h1>Struktur Pimpinan Cabang</h1>
+    <p class="hero-desc">Pimpinan Cabang Muhammadiyah (PCM) Kottabarat Periode 2022 – 2027</p>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="org-tree-wrapper">
+    
+    <!-- LEVEL 1: PENASEHAT -->
+    {% if advisors %}
+    <div class="tree-level">
+      <div class="tree-section-tag advisor-tag">Dewan Penasehat Cabang</div>
+      <div class="tree-row advisor-row">
+        {% for leader in advisors %}
+        <div class="tree-card advisor-card">
+          {% if leader.photo %}<img class="tree-avatar" src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+          <div class="card-role">{{ leader.position }}</div>
+          <div class="card-name">{{ leader.name }}</div>
+          {% if leader.period %}<div class="card-period">Periode {{ leader.period }}</div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="tree-stem"></div>
+    </div>
+    {% endif %}
+
+    <!-- LEVEL 2: KETUA CABANG -->
+    {% if chiefs %}
+    <div class="tree-level">
+      <div class="tree-section-tag chief-tag">Pucuk Pimpinan Cabang</div>
+      <div class="tree-row">
+        {% for leader in chiefs %}
+        <div class="tree-card chief-card">
+          <div class="chief-emblem" aria-hidden="true">★</div>
+          {% if leader.photo %}<img class="tree-avatar-chief" src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+          <div class="card-role chief-badge">{{ leader.position }}</div>
+          <div class="card-name chief-name">{{ leader.name }}</div>
+          <div class="card-period chief-period">Pimpinan Cabang Muhammadiyah Kottabarat {% if leader.period %}{{ leader.period }}{% endif %}</div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="tree-stem"></div>
+    </div>
+    {% endif %}
+
+    <!-- LEVEL 3: WAKIL KETUA -->
+    {% if vices %}
+    <div class="tree-level">
+      <div class="tree-section-tag">Wakil Pimpinan Cabang</div>
+      <div class="tree-row branch-row">
+        {% for leader in vices %}
+        <div class="tree-card vice-card">
+          {% if leader.photo %}<img class="tree-avatar" src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+          <div class="card-role">{{ leader.position }}</div>
+          <div class="card-name">{{ leader.name }}</div>
+          {% if leader.scope %}<div class="card-scope">{{ leader.scope }}</div>{% endif %}
+          {% if leader.period %}<div class="card-period">{{ leader.period }}</div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="tree-stem"></div>
+    </div>
+    {% endif %}
+
+    <!-- LEVEL 4: SEKRETARIAT & KEBENDAHARAAN -->
+    {% if officers %}
+    <div class="tree-level">
+      <div class="tree-section-tag">Sekretariat & Kebendaharaan</div>
+      <div class="tree-row branch-row quad-row">
+        {% for leader in officers %}
+        <div class="tree-card officer-card">
+          {% if leader.photo %}<img class="tree-avatar" src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+          <div class="card-role">{{ leader.position }}</div>
+          <div class="card-name">{{ leader.name }}</div>
+          {% if leader.scope %}<div class="card-scope">{{ leader.scope }}</div>{% endif %}
+          {% if leader.period %}<div class="card-period">{{ leader.period }}</div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="tree-stem"></div>
+    </div>
+    {% endif %}
+
+    <!-- LEVEL 5: ANGGOTA PLENO -->
+    {% if plenos %}
+    <div class="tree-level">
+      <div class="tree-section-tag">Anggota Pleno Pimpinan Cabang</div>
+      <div class="tree-row branch-row duo-row">
+        {% for leader in plenos %}
+        <div class="tree-card member-card">
+          {% if leader.photo %}<img class="tree-avatar" src="{{ leader.photo.url }}" alt="{{ leader.name }}">{% endif %}
+          <div class="card-role">{{ leader.position }}</div>
+          <div class="card-name">{{ leader.name }}</div>
+          {% if leader.period %}<div class="card-period">{{ leader.period }}</div>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <div class="tree-stem"></div>
+    </div>
+    {% endif %}
+
+    <!-- LEVEL 6: MAJELIS & LEMBAGA -->
+    {% if councils %}
+    <div class="tree-level full-width">
+      <div class="tree-section-tag majelis-header-tag">Unsur Pembantu Pimpinan (Majelis & Lembaga Cabang)</div>
+      <div class="majelis-grid">
+        {% for council in councils %}
+        <div class="majelis-box">
+          <div class="majelis-badge">{{ council.name }}</div>
+          {% if council.supervisor %}<div class="majelis-spv"><strong>Supervisor:</strong> {{ council.supervisor }}</div>{% endif %}
+          <div class="majelis-lead">
+            <span class="role-pill">Ketua Majelis</span>
+            <strong>{{ council.chairperson }}</strong>
+          </div>
+          {% if council.member_list %}
+          <div class="majelis-members">
+            <span class="members-label">Anggota:</span>
+            <ul>
+              {% for member in council.member_list %}
+              <li>{{ member }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+>>>>>>> origin/main
 </section>
 {% endblock %}

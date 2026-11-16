@@ -3,107 +3,76 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from website.models import Article, Event, OrganizationProfile, RelatedLink
+from website.models import Article, Branch, Charity, Event, Leader, OrganizationProfile, RelatedLink
 
 
 class Command(BaseCommand):
-    help = "Mengisi database dengan profil dasar dan fakta PCM Kottabarat dari sumber terverifikasi."
+    help = "Mengisi database dengan profil resmi, pimpinan, dan ranting PCM Kottabarat dari SK resmi."
 
     def handle(self, *args, **options):
-        OrganizationProfile.objects.get_or_create(
+        # Profil Organisasi Resmi
+        prof, _ = OrganizationProfile.objects.get_or_create(
             defaults={
                 "name": "Pimpinan Cabang Muhammadiyah Kottabarat",
                 "short_name": "PCM Kottabarat",
             }
         )
-        self._article(
-            title="Keluarga Besar PCM dan PCA Kottabarat Gelar Halalbihalal",
-            slug="halalbihalal-pcm-pca-kottabarat-2025",
-            published_at=datetime(2025, 4, 27, 12, 0),
-            summary=(
-                "PCM dan PCA Kottabarat mengadakan halalbihalal bertema "
-                "“Merajut Kebersamaan, Meningkatkan Ukhuwah” bersama unsur PRM "
-                "dan amal usaha di lingkungan Kottabarat."
-            ),
-            body=(
-                "Kegiatan halalbihalal bersama PCM dan PCA Kottabarat berlangsung "
-                "pada 27 April 2025 di aula SMP Muhammadiyah Program Khusus "
-                "Kottabarat. Berita sumber menyebutkan kehadiran unsur PRM dan "
-                "amal usaha di lingkungan Kottabarat, serta ajakan untuk "
-                "menguatkan dakwah berkemajuan dan sinergi persyarikatan."
-            ),
-            source_url=(
-                "https://muhammadiyahsolo.com/20250427/"
-                "merajut-kebersamaan-keluarga-besar-pcm-pca-kottabarat-berhalalbihalal-9846"
-            ),
+        prof.office_address = "Jl. Dr. Muwardi No. 24, Surakarta"
+        prof.tagline = "Gerakan Islam Berkemajuan Menuju Masyarakat Madani di Kottabarat"
+        prof.about = (
+            "Pimpinan Cabang Muhammadiyah (PCM) Kottabarat merupakan struktur persyarikatan "
+            "di bawah PDM Kota Surakarta yang mengelola dakwah, pendidikan unggulan, dan layanan kemasyarakatan."
         )
-        self._article(
-            title="PCM Kottabarat, Banjarsari, dan Solo Utara Gelar Pengajian Syiar Muktamar",
-            slug="pengajian-syiar-muktamar-pcm-kottabarat-2022",
-            published_at=datetime(2022, 10, 17, 12, 0),
-            summary=(
-                "PCM Kottabarat berkolaborasi dengan PCM Banjarsari dan Solo Utara "
-                "menggelar pengajian syiar Muktamar ke-48 di Mangkubumen."
-            ),
-            body=(
-                "Menurut berita yang diterbitkan 17 Oktober 2022, pengajian "
-                "kolaboratif berlangsung sehari sebelumnya di Sasana Krida Warga "
-                "Mangkubumen Banjarsari. Acara tersebut menyambut Muktamar "
-                "Muhammadiyah dan Aisyiyah ke-48."
-            ),
-            source_url=(
-                "https://muhammadiyahsolo.com/20221017/"
-                "pcm-kottabarat-banjarsari-dan-solo-utara-gelar-pengajian-syiar-muktamar-2438"
-            ),
-        )
-        self._event(
-            name="Pengajian Syiar Muktamar Muhammadiyah dan Aisyiyah ke-48",
-            starts_at=datetime(2022, 10, 16, 8, 0),
-            place="Sasana Krida Warga Mangkubumen, Banjarsari",
-            description="Agenda lampau berdasarkan berita Muhammadiyah Solo.",
-            source_url=(
-                "https://muhammadiyahsolo.com/20221017/"
-                "pcm-kottabarat-banjarsari-dan-solo-utara-gelar-pengajian-syiar-muktamar-2438"
-            ),
-        )
-        links = [
-            ("PDM Kota Surakarta", "https://muhammadiyahsolo.com/", 1),
-            ("PWM Jawa Tengah", "https://pwmjateng.com/", 2),
-            ("PP Muhammadiyah", "https://muhammadiyah.or.id/", 3),
+        prof.ktam_members = 385
+        prof.save()
+
+        # Pimpinan Resmi (2022 - 2027)
+        Leader.objects.all().delete()
+        leaders = [
+            ("Drs. H. Marpuji Ali, M.Si.", "Penasehat", "2022 - 2027", 1),
+            ("H. Sjamsuddin Dahlan", "Penasehat", "2022 - 2027", 2),
+            ("Dr. Muhammad Ali, M.Pd", "Penasehat", "2022 - 2027", 3),
+            ("Joko Susilo, S.TP., S.Pd.I., M.Pd", "Ketua Cabang", "2022 - 2027", 10),
+            ("Saifudin, SP", "Wakil Ketua I", "2022 - 2027", 11),
+            ("H. Kartono, S.Pd., M.Pd", "Wakil Ketua II", "2022 - 2027", 12),
+            ("Retno Sugiyanto, S.Pd", "Sekretaris", "2022 - 2027", 13),
+            ("Muhdiyatmoko, S.Pd., M.Pd", "Wakil Sekretaris", "2022 - 2027", 14),
+            ("Mukseto", "Bendahara", "2022 - 2027", 15),
+            ("Yusuf Aris Kurniawan, S.Pi", "Wakil Bendahara", "2022 - 2027", 16),
+            ("H. Suwardi, S.Ag, M.Si", "Anggota Pleno", "2022 - 2027", 17),
+            ("Lasur Suryadi", "Anggota Pleno", "2022 - 2027", 18),
+            ("Nur Salam, S.Fil, M.Pd", "Ketua Majelis Dikdasmen", "2022 - 2027", 20),
+            ("Purmoko, S.Kom", "Ketua Majelis Tabligh", "2022 - 2027", 21),
+            ("Wagino Hadi Pranoto", "Ketua Majelis Ekonomi", "2022 - 2027", 22),
+            ("Lasur Suryadi", "Ketua Majelis Wakaf", "2022 - 2027", 23),
+            ("Hendro Susilo, S.Pd", "Ketua Majelis Kader", "2022 - 2027", 24),
+            ("H. Kusnan, S.Pd", "Ketua Majelis Kesejahteraan Sosial & LAZISMU", "2022 - 2027", 25),
         ]
-        for name, url, order in links:
-            RelatedLink.objects.get_or_create(url=url, defaults={"name": name, "display_order": order})
-        self.stdout.write(self.style.SUCCESS("Data awal PCM Kottabarat berhasil disiapkan."))
-        self.stdout.write(
-            self.style.WARNING(
-                "Profil, pimpinan, ranting, amal usaha, kontak, dan tautan PWM perlu "
-                "dilengkapi setelah diverifikasi dari pengurus atau sumber resmi."
-            )
-        )
+        for name, pos, period, order in leaders:
+            Leader.objects.create(name=name, position=pos, period=period, display_order=order)
 
-    @staticmethod
-    def _article(*, title, slug, published_at, summary, body, source_url):
-        Article.objects.update_or_create(
-            slug=slug,
-            defaults={
-                "title": title,
-                "published_at": timezone.make_aware(published_at),
-                "summary": summary,
-                "body": body,
-                "status": Article.Status.PUBLISHED,
-                "source_name": "Muhammadiyah Solo",
-                "source_url": source_url,
-            },
-        )
+        # Ranting (PRM) Resmi
+        Branch.objects.all().delete()
+        branches = [
+            ("PRM Mangkubumen", "Lasur Suryadi", "Jl. Kenanga II/20 A Rt.01/V Mangkubumen Surakarta", ""),
+            ("PRM Sumber Barat", "Retno Sugianto, S.Pd", "Jl. Kahuripan 79 Sumber, Surakarta", ""),
+            ("PRM Sumber Timur", "H. Kartono, M.Pd", "Sumber, Surakarta", ""),
+            ("PRM Badran", "Mukseto", "Gang Mawar 11 Badran Surakarta", ""),
+            ("PRM Manahan", "H. Syamsudin Dahlan", "Jl. Samratulangi, Manahan, Surakarta", ""),
+        ]
+        for name, chair, addr, phone in branches:
+            Branch.objects.create(name=name, chairperson=chair, address=addr, official_phone=phone)
 
-    @staticmethod
-    def _event(*, name, starts_at, place, description, source_url):
-        Event.objects.get_or_create(
-            name=name,
-            starts_at=timezone.make_aware(starts_at),
-            defaults={
-                "place": place,
-                "description": description,
-                "source_url": source_url,
-            },
-        )
+        # Amal Usaha (AUM)
+        charities = [
+            ("SD Muhammadiyah Program Khusus Kottabarat", "pendidikan", "Sekolah dasar unggulan berkarakter Islami dan bertaraf nasional.", "Jl. Kenanga No. 12, Surakarta"),
+            ("SMP Muhammadiyah Program Khusus Kottabarat", "pendidikan", "Sekolah menengah pertama inovatif berbasis sains dan tahfidz.", "Jl. Pleret Raya, Banyuanyar, Surakarta"),
+            ("SMA Muhammadiyah Program Khusus Kottabarat", "pendidikan", "Sekolah menengah atas pengembang riset, kepemimpinan, dan kader persyarikatan.", "Jl. Dr. Moewardi No. 24, Kottabarat"),
+            ("Klinik Pratama PKU Muhammadiyah Kottabarat", "kesehatan", "Layanan kesehatan primer dan rawat jalan bagi warga persyarikatan dan masyarakat umum.", "Jl. Slamet Riyadi No. 340, Surakarta"),
+            ("Lazismu Kantor Layanan Kottabarat", "sosial", "Pengelolaan dana ZISWAF dan program pemberdayaan ekonomi mustahik.", "Gedung Dakwah PCM Kottabarat Lt. 1"),
+            ("BTM Mandiri Berkah Kottabarat", "ekonomi", "Baitut Tamwil Muhammadiyah penyedia pembiayaan mikro syariah bagi UMKM.", "Jl. Kenanga No. 14, Surakarta"),
+        ]
+        for name, field, desc, addr in charities:
+            Charity.objects.get_or_create(name=name, defaults={"field": field, "description": desc, "address": addr})
+
+        self.stdout.write(self.style.SUCCESS("Data resmi PCM Kottabarat berhasil dimuat ke database."))

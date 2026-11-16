@@ -36,12 +36,31 @@ class OrganizationProfile(models.Model):
 
 
 class Leader(models.Model):
-    name = models.CharField(max_length=160)
-    position = models.CharField(max_length=120)
-    period = models.CharField(max_length=40, blank=True)
-    photo = models.ImageField(upload_to="leaders/", blank=True)
-    photo_credit = models.CharField(max_length=180, blank=True)
-    display_order = models.PositiveIntegerField(default=0)
+    class Tier(models.TextChoices):
+        ADVISOR = "penasehat", "1. Dewan Penasehat"
+        CHIEF = "ketua", "2. Pucuk Pimpinan (Ketua Cabang)"
+        VICE = "wakil", "3. Wakil Ketua Cabang"
+        OFFICER = "harian", "4. Sekretariat & Kebendaharaan"
+        PLENO = "pleno", "5. Anggota Pleno Cabang"
+
+    tier = models.CharField(
+        max_length=20,
+        choices=Tier.choices,
+        default=Tier.PLENO,
+        verbose_name="Tingkat Hierarki Silsilah",
+    )
+    name = models.CharField(max_length=160, verbose_name="Nama Lengkap")
+    position = models.CharField(max_length=120, verbose_name="Jabatan Resmi")
+    period = models.CharField(max_length=40, blank=True, default="2022 - 2027", verbose_name="Periode")
+    scope = models.CharField(
+        max_length=160,
+        blank=True,
+        verbose_name="Bidang Koordinasi / Keterangan",
+        help_text="Contoh: Koordinator Bidang: Tabligh, Tarjih, Ekonomi",
+    )
+    photo = models.ImageField(upload_to="leaders/", blank=True, verbose_name="Foto Pimpinan")
+    photo_credit = models.CharField(max_length=180, blank=True, verbose_name="Kredit Foto")
+    display_order = models.PositiveIntegerField(default=0, verbose_name="Urutan Tampilan")
 
     class Meta:
         ordering = ["display_order", "name"]
@@ -50,6 +69,30 @@ class Leader(models.Model):
 
     def __str__(self):
         return f"{self.name} — {self.position}"
+
+
+class Council(models.Model):
+    name = models.CharField(max_length=160, verbose_name="Nama Majelis / Lembaga")
+    supervisor = models.CharField(max_length=160, blank=True, verbose_name="Supervisor Pimpinan")
+    chairperson = models.CharField(max_length=160, verbose_name="Ketua Majelis")
+    members = models.TextField(
+        blank=True,
+        help_text="Tulis satu nama anggota per baris",
+        verbose_name="Daftar Anggota Majelis",
+    )
+    display_order = models.PositiveIntegerField(default=0, verbose_name="Urutan Tampilan")
+
+    class Meta:
+        ordering = ["display_order", "name"]
+        verbose_name = "Majelis / Lembaga"
+        verbose_name_plural = "Majelis & Lembaga"
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def member_list(self):
+        return [m.strip() for m in self.members.splitlines() if m.strip()]
 
 
 class Branch(models.Model):
@@ -132,6 +175,7 @@ class Article(models.Model):
                 suffix += 1
             self.slug = candidate
         return super().save(*args, **kwargs)
+
 
 class Event(models.Model):
     name = models.CharField(max_length=200)

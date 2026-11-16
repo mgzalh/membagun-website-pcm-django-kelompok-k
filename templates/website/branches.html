@@ -1,41 +1,71 @@
+
 {% extends "website/base.html" %}
 {% block title %}Ranting | PCM Kottabarat{% endblock %}
 {% block content %}
 <section class="page-hero">
   <div class="container">
-    <p class="eyebrow">Jejaring dakwah PCM Kotta Barat</p>
+    <p class="eyebrow">Jejaring dakwah PCM Kottabarat</p>
     <h1>Ranting Muhammadiyah</h1>
     <p>Informasi Pimpinan Cabang dan {{ branch_count }} Pimpinan Ranting Muhammadiyah di wilayah Kottabarat.</p>
   </div>
 </section>
+
 <section class="section container branch-directory">
   {% if pcm %}
     <article class="pcm-summary">
       <div class="pcm-mark" aria-hidden="true">PCM</div>
-      <div class="pcm-title"><p class="eyebrow">Pimpinan Cabang Muhammadiyah</p><h2>{{ pcm.name|title }}</h2></div>
+      <div class="pcm-title">
+        <p class="eyebrow">Pimpinan Cabang Muhammadiyah</p>
+        <h2>{{ pcm.name|title }}</h2>
+      </div>
       <dl class="branch-facts">
-        <div><dt>Ketua PCM</dt><dd>{{ pcm.chairperson|default:"Belum tersedia" }}</dd></div>
-        <div><dt>Alamat kantor</dt><dd>{% if pcm.address %}<address>{{ pcm.address }}</address>{% else %}Belum tersedia{% endif %}</dd></div>
+        <div>
+          <dt>Ketua PCM</dt>
+          <dd>{{ pcm.chairperson|default:"Belum tersedia" }}</dd>
+        </div>
+        <div>
+          <dt>Alamat kantor</dt>
+          <dd>{% if pcm.address %}<address>{{ pcm.address }}</address>{% else %}Belum tersedia{% endif %}</dd>
+        </div>
       </dl>
     </article>
   {% endif %}
 
   <section class="branch-prm-section" aria-labelledby="prm-heading">
     <div class="section-heading">
-      <div><p class="eyebrow">Jejaring lokal</p><h2 id="prm-heading">Daftar Pimpinan Ranting</h2></div>
+      <div>
+        <p class="eyebrow">Jejaring lokal</p>
+        <h2 id="prm-heading">Daftar Pimpinan Ranting</h2>
+      </div>
       <span class="count-label">{{ branch_count }} PRM terdata</span>
     </div>
+
     {% if branches %}
       <div class="table-wrap">
         <table class="branch-table">
-          <thead><tr><th scope="col">No.</th><th scope="col">Nama ranting</th><th scope="col">Ketua ranting</th><th scope="col">Alamat kantor ranting</th></tr></thead>
+          <thead>
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">Nama ranting</th>
+              <th scope="col">Ketua ranting</th>
+              <th scope="col">Alamat kantor ranting</th>
+              <th scope="col">Kontak resmi</th>
+            </tr>
+          </thead>
           <tbody>
             {% for branch in branches %}
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td class="branch-name">{{ branch.name }}</td>
                 <td>{{ branch.chairperson|default:"Belum tersedia" }}</td>
-                <td>{% if branch.address %}<address>{{ branch.address }}</address>{% else %}Belum tersedia{% endif %}</td>
+                <td>
+                  {% if branch.address %}
+                    <address>{{ branch.address }}</address>
+                  {% else %}
+                    Belum tersedia
+                  {% endif %}
+                </td>
+                <td>{{ branch.official_phone|default:"Belum tersedia" }}</td>
               </tr>
             {% endfor %}
           </tbody>
