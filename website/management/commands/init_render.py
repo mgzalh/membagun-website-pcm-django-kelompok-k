@@ -12,13 +12,16 @@ class Command(BaseCommand):
     help = "Inisialisasi data awal, berita, agenda, dan superuser admin untuk deployment production (Render)"
 
     def handle(self, *args, **options):
-        # 1. Jalankan seed data PCM dasar (profil, pimpinan, ranting, amal usaha)
-        self.stdout.write("Menjalankan seed data PCM...")
-        try:
-            call_command("seed_pcm")
-            self.stdout.write(self.style.SUCCESS("Berhasil mengisi data PCM dasar."))
-        except Exception as e:
-            self.stdout.write(self.style.WARNING(f"Gagal seed_pcm: {e}"))
+        # 1. Jalankan seed data PCM jika database masih kosong
+        if Charity.objects.count() == 0 or Leader.objects.count() == 0:
+            self.stdout.write("Menjalankan inisialisasi data PCM...")
+            try:
+                call_command("seed_pcm")
+                self.stdout.write(self.style.SUCCESS("Berhasil mengisi data PCM dasar."))
+            except Exception as e:
+                self.stdout.write(self.style.WARNING(f"Gagal seed_pcm: {e}"))
+        else:
+            self.stdout.write(self.style.SUCCESS("Data PCM sudah ada di database, lewati seed untuk menjaga data admin."))
 
         # 2. Seed Agenda Kegiatan yang rapi dan sesuai nama hari/waktunya
         Event.objects.all().delete()

@@ -22,6 +22,10 @@
             {% if charity.image %}
               <img src="{{ charity.image.url }}" alt="">
               {% if charity.image_credit %}<small class="photo-credit">{{ charity.image_credit }}</small>{% endif %}
+            {% else %}
+              <div class="article-cover article-cover-placeholder" aria-hidden="true" style="height: 175px;">
+                <span>{{ charity.name|truncatewords:2 }}</span>
+              </div>
             {% endif %}
             <div>
               <h3>{{ charity.name }}</h3>
