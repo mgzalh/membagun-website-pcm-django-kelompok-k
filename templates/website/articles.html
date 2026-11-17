@@ -3,14 +3,22 @@
 {% block content %}
 <section class="page-hero"><div class="container"><p class="eyebrow">Kabar terbaru</p><h1>Berita PCM Kottabarat</h1><p>Berita terbit yang bersumber dan dapat ditelusuri.</p></div></section>
 <section class="section container">
+  <form class="article-search" method="get" role="search">
+    <label for="article-search-query">Cari berita</label>
+    <div class="article-search-controls">
+      <input id="article-search-query" type="search" name="q" value="{{ query }}" placeholder="Masukkan kata kunci berita">
+      <button class="button button-primary" type="submit">Cari</button>
+    </div>
+  </form>
+  {% if query %}<p class="article-search-results">Hasil pencarian untuk “{{ query }}”: {{ page_obj.paginator.count }} berita.</p>{% endif %}
   <div class="card-grid">
-    {% for article in page_obj %}{% include "website/includes/article_card.html" with article=article %}{% empty %}<p class="empty-state">Belum ada berita yang dipublikasikan.</p>{% endfor %}
+    {% for article in page_obj %}{% include "website/includes/article_card.html" with article=article %}{% empty %}<p class="empty-state">{% if query %}Tidak ada berita yang cocok dengan kata kunci tersebut.{% else %}Belum ada berita yang dipublikasikan.{% endif %}</p>{% endfor %}
   </div>
   {% if page_obj.paginator.num_pages > 1 %}
     <nav class="pagination" aria-label="Navigasi halaman berita">
-      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}" aria-label="Halaman sebelumnya">← Sebelumnya</a>{% endif %}
+      {% if page_obj.has_previous %}<a href="?q={{ query|urlencode }}&amp;page={{ page_obj.previous_page_number }}" aria-label="Halaman sebelumnya">← Sebelumnya</a>{% endif %}
       <span>Halaman {{ page_obj.number }} dari {{ page_obj.paginator.num_pages }}</span>
-      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}" aria-label="Halaman berikutnya">Berikutnya →</a>{% endif %}
+      {% if page_obj.has_next %}<a href="?q={{ query|urlencode }}&amp;page={{ page_obj.next_page_number }}" aria-label="Halaman berikutnya">Berikutnya →</a>{% endif %}
     </nav>
   {% endif %}
 </section>

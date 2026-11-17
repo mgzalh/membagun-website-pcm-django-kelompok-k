@@ -111,6 +111,12 @@ h3 { font-size: 1.2rem; }
 .event-item p { color: var(--muted); font-size: .9rem; }
 .event-past { opacity: .8; }
 .empty-state { grid-column: 1 / -1; margin: 0; padding: 1.25rem; border: 1px dashed #b9c9bf; border-radius: 12px; color: var(--muted); background: rgb(255 255 255 / 70%); }
+.article-search { max-width: 640px; margin: 0 auto 1rem; }
+.article-search label { display: block; margin-bottom: .35rem; font-weight: 700; }
+.article-search-controls { display: flex; gap: .6rem; }
+.article-search input { min-width: 0; flex: 1; padding: .65rem .85rem; border: 1px solid #cbd9d0; border-radius: 999px; color: var(--ink); background: white; font: inherit; }
+.article-search input:focus { outline: 3px solid #d6ebbb; border-color: var(--green); }
+.article-search-results { margin: 0 0 1.25rem; color: var(--muted); text-align: center; }
 .page-hero { padding-block: 3.8rem; color: white; background: linear-gradient(115deg, #073e31, #0c6b4d); }
 .page-hero h1 { margin: .25rem 0 .5rem; font-size: clamp(2.2rem, 4vw, 3.5rem); }
 .page-hero p:last-child { margin: 0; color: #e1eee8; }

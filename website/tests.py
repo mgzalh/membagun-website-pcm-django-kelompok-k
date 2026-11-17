@@ -64,6 +64,57 @@ class PublicPageTests(TestCase):
         self.assertEqual(len(first_page.context["page_obj"].object_list), 6)
         self.assertEqual(len(second_page.context["page_obj"].object_list), 1)
 
+    def test_article_list_search_matches_title_summary_and_body(self):
+        matching_articles = [
+            Article.objects.create(
+                title="Kegiatan PCM",
+                status=Article.Status.PUBLISHED,
+                published_at=timezone.now(),
+            ),
+            Article.objects.create(
+                title="Berita kedua",
+                summary="Kegiatan warga",
+                status=Article.Status.PUBLISHED,
+                published_at=timezone.now(),
+            ),
+            Article.objects.create(
+                title="Berita ketiga",
+                body="Laporan kegiatan",
+                status=Article.Status.PUBLISHED,
+                published_at=timezone.now(),
+            ),
+        ]
+        Article.objects.create(
+            title="Kegiatan draf",
+            summary="Jangan ditampilkan",
+        )
+        Article.objects.create(
+            title="Berita lain",
+            status=Article.Status.PUBLISHED,
+            published_at=timezone.now(),
+        )
+
+        response = self.client.get(reverse("website:articles"), {"q": "  KEGIATAN  "})
+
+        self.assertEqual(
+            set(response.context["page_obj"].object_list),
+            set(matching_articles),
+        )
+        self.assertEqual(response.context["query"], "KEGIATAN")
+
+    def test_article_list_search_pagination_preserves_query(self):
+        for index in range(7):
+            Article.objects.create(
+                title=f"Kegiatan {index}",
+                status=Article.Status.PUBLISHED,
+                published_at=timezone.now() - timedelta(days=index),
+            )
+
+        response = self.client.get(reverse("website:articles"), {"q": "Kegiatan", "page": 2})
+
+        self.assertEqual(response.context["page_obj"].number, 2)
+        self.assertContains(response, "?q=Kegiatan&amp;page=1")
+
     def test_contact_form_saves_message(self):
         response = self.client.post(
             reverse("website:contact"),

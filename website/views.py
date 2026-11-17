@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -76,9 +77,21 @@ def charities(request):
 
 
 def article_list(request):
-    paginator = Paginator(Article.published.all(), 6)
+    query = request.GET.get("q", "").strip()
+    articles = Article.published.all()
+    if query:
+        articles = articles.filter(
+            Q(title__icontains=query)
+            | Q(summary__icontains=query)
+            | Q(body__icontains=query)
+        )
+    paginator = Paginator(articles, 6)
     page_obj = paginator.get_page(request.GET.get("page"))
-    return render(request, "website/articles.html", {"page_obj": page_obj})
+    return render(
+        request,
+        "website/articles.html",
+        {"page_obj": page_obj, "query": query},
+    )
 
 
 def article_detail(request, slug):
