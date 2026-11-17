@@ -106,7 +106,7 @@ h3 { font-size: 1.2rem; }
 .event-list { display: grid; gap: .75rem; }
 .event-item { display: flex; align-items: flex-start; gap: 1.2rem; padding: 1.15rem; border: 1px solid var(--line); border-radius: 12px; background: white; }
 .event-date { display: flex; width: 66px; flex: 0 0 66px; align-items: center; flex-direction: column; padding: .45rem; border-radius: 10px; color: var(--green); background: #eef5e5; font-size: .7rem; font-weight: 700; text-transform: uppercase; }
-.event-date span { font: 800 1.4rem "Manrope", sans-serif; }
+.event-date span { font: 800 1rem "Manrope", sans-serif; }
 .event-item h3, .event-item p { margin: 0 0 .3rem; }
 .event-item p { color: var(--muted); font-size: .9rem; }
 .event-past { opacity: .8; }
