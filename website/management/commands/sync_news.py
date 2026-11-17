@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 import re
 import urllib.request
 from datetime import datetime
@@ -61,10 +62,20 @@ class Command(BaseCommand):
             self.stdout.write(f"\nMemproses: {title[:55]}...")
 
             # Ambil detail halaman artikel untuk isi lengkap dan foto asli
+
             summary, body_text, img_url = self._fetch_article_detail(art_url, headers)
+
+            if not body_text.strip():
+                self.stderr.write(
+                    self.style.WARNING(
+                        f"Isi berita gagal diambil, dilewati: {title}"
+                    )
+                )
+                continue
 
             # Cek artikel di database
             article = Article.objects.filter(source_url=art_url).first()
+
             if not article:
                 base_slug = slugify(title)[:200] or f"berita-{date_str}"
                 slug = base_slug
@@ -145,17 +156,72 @@ class Command(BaseCommand):
                         break
 
             # 2. Cari paragraf konten
-            paras = re.findall(r'<p[^>]*>([\s\S]*?)</p>', html)
-            clean_paras = []
-            for p in paras:
-                text = unescape(re.sub(r"<[^>]+>", "", p).strip())
-                if len(text) > 40 and not text.startswith("Baca juga") and not text.startswith("Editor:"):
-                    clean_paras.append(text)
+            
+            # 2. Ambil isi artikel saja, bukan seluruh halaman
+            soup = BeautifulSoup(html, "html.parser")
 
-            summary = clean_paras[0] if clean_paras else ""
+
+            content = soup.select_one(
+                "div.post-detail > div.row > div.col-12"
+            )
+
+
+            if content is None:
+                self.stderr.write(
+                    f"Isi artikel tidak ditemukan: {url}"
+                )
+                return "", "", img_url
+
+            # Hapus elemen yang bukan isi berita
+            for tag in content.select(
+                "script, style, noscript, nav, footer, "
+                "aside, form, iframe, button"
+            ):
+                tag.decompose()
+
+            for tag in content.find_all(
+                class_=re.compile(
+                    r"share|social|related|sidebar|footer|"
+                    r"comment|widget|advert|breadcrumb|copyright",
+                    re.I,
+                )
+            ):
+                tag.decompose()
+
+            clean_paras = []
+
+            for p in content.find_all("p"):
+                text = p.get_text(" ", strip=True)
+                text = re.sub(r"\s+", " ", text).strip()
+                lower = text.lower()
+
+                if len(text) < 50:
+                    continue
+
+                if lower.startswith((
+                    "baca juga", "bagikan artikel",
+                    "klik ikon", "editor:", "copyright"
+                )):
+                    continue
+
+                if any(code in lower for code in (
+                    "document.", "const sharemodal",
+                    "addeventlistener", "#sidebar",
+                    "admin-ajax.php", "function("
+                )):
+                    continue
+
+                clean_paras.append(text)
+
+            summary = clean_paras[0][:300] if clean_paras else ""
             body_text = "\n\n".join(clean_paras)
+
             return summary, body_text, img_url
+
         except Exception as e:
+            self.stderr.write(
+                self.style.ERROR(f"Gagal membaca artikel {url}: {e}")
+            )
             return "", "", None
 
     def _download_image(self, url, headers):
