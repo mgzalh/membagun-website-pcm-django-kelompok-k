@@ -20,32 +20,32 @@ class Command(BaseCommand):
         except Exception as e:
             self.stdout.write(self.style.WARNING(f"Gagal seed_pcm: {e}"))
 
-        # 2. Seed Agenda Kegiatan jika masih kosong
-        if not Event.objects.exists():
-            now = timezone.now()
-            events = [
-                (
-                    "Kajian Rutin Ahad Pagi PCM Kottabarat",
-                    now + timedelta(days=3),
-                    "Masjid Kottabarat Surakarta",
-                    "Kajian rutin pencerahan keislaman dan keumatan menghadirkan narasumber dari PP Muhammadiyah.",
-                ),
-                (
-                    "Rapat Koordinasi Majelis Dikdasmen & Amal Usaha",
-                    now + timedelta(days=7),
-                    "Gedung Dakwah PCM Kottabarat Lt. 2",
-                    "Koordinasi persiapan tahun ajaran baru sekolah unggulan PK Kottabarat.",
-                ),
-                (
-                    "Baitul Arqam Pimpinan & Kader Ranting Kottabarat",
-                    now + timedelta(days=14),
-                    "Balai Diklat PCM Kottabarat",
-                    "Penguatan ideologi bermuhammadiyah dan peningkatan kepemimpinan kader persyarikatan.",
-                ),
-            ]
-            for name, starts_at, place, desc in events:
-                Event.objects.create(name=name, starts_at=starts_at, place=place, description=desc)
-            self.stdout.write(self.style.SUCCESS("Berhasil mengisi 3 agenda mendatang."))
+        # 2. Seed Agenda Kegiatan yang rapi dan sesuai nama hari/waktunya
+        Event.objects.all().delete()
+        tz = timezone.get_current_timezone()
+        events = [
+            (
+                "Kajian Rutin Ahad Pagi PCM Kottabarat",
+                timezone.datetime(2026, 11, 22, 6, 0, tzinfo=tz),
+                "Masjid Kottabarat Surakarta",
+                "Kajian rutin pencerahan keislaman dan keumatan menghadirkan narasumber dari PP Muhammadiyah.",
+            ),
+            (
+                "Rapat Koordinasi Majelis Dikdasmen & Amal Usaha",
+                timezone.datetime(2026, 11, 25, 9, 0, tzinfo=tz),
+                "Gedung Dakwah PCM Kottabarat Lt. 2",
+                "Koordinasi persiapan tahun ajaran baru sekolah unggulan PK Kottabarat.",
+            ),
+            (
+                "Baitul Arqam Pimpinan & Kader Ranting Kottabarat",
+                timezone.datetime(2026, 11, 28, 8, 0, tzinfo=tz),
+                "Balai Diklat PCM Kottabarat",
+                "Penguatan ideologi bermuhammadiyah dan peningkatan kepemimpinan kader persyarikatan.",
+            ),
+        ]
+        for name, starts_at, place, desc in events:
+            Event.objects.create(name=name, starts_at=starts_at, place=place, description=desc)
+        self.stdout.write(self.style.SUCCESS("Berhasil memperbarui 3 agenda kegiatan yang rapi."))
 
         # 3. Sinkronisasi Berita (sync_news) atau buat fallback artikel
         self.stdout.write("Menyinkronkan berita...")

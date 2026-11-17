@@ -55,8 +55,20 @@
     <div class="event-list">
       {% for event in upcoming_events %}
         <article class="event-item">
-          <div class="event-date"><span>{{ event.starts_at|date:"d" }}</span>{{ event.starts_at|date:"M Y" }}</div>
-          <div><h3>{{ event.name }}</h3><p>{{ event.starts_at|date:"l, d F Y · H:i" }}{% if event.place %} · {{ event.place }}{% endif %}</p></div>
+          <div class="event-date">
+            <span class="event-day">{{ event.starts_at|date:"d" }}</span>
+            <span class="event-month">{{ event.starts_at|date:"M" }}</span>
+            <span class="event-year">{{ event.starts_at|date:"Y" }}</span>
+          </div>
+          <div class="event-info">
+            <h3>{{ event.name }}</h3>
+            <div class="event-meta">
+              <span>📅 {{ event.starts_at|date:"l, d F Y" }}</span>
+              <span>⏰ Pukul {{ event.starts_at|date:"H.i" }} WIB</span>
+              {% if event.place %}<span>📍 {{ event.place }}</span>{% endif %}
+            </div>
+            {% if event.description %}<p class="event-desc">{{ event.description }}</p>{% endif %}
+          </div>
         </article>
       {% empty %}
         <p class="empty-state">Belum ada agenda mendatang yang dipublikasikan.</p>
