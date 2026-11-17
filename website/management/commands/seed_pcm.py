@@ -3,11 +3,11 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from website.models import Branch, Charity, Leader, OrganizationProfile, RelatedLink
+from website.models import Branch, Charity, Council, Leader, OrganizationProfile, RelatedLink
 
 
 class Command(BaseCommand):
-    help = "Mengisi database dengan profil resmi, pimpinan hierarkis, ranting, amal usaha, dan tautan resmi PCM Kottabarat."
+    help = "Mengisi database dengan profil resmi, pimpinan hierarkis, majelis/lembaga, ranting, amal usaha, dan tautan resmi PCM Kottabarat."
 
     def handle(self, *args, **options):
         # 1. Profil Organisasi Resmi
@@ -69,7 +69,62 @@ class Command(BaseCommand):
                 display_order=order,
             )
 
-        # 4. Ranting (PRM) Resmi
+        # 4. Unsur Pembantu Pimpinan (Majelis & Lembaga Cabang)
+        Council.objects.all().delete()
+        councils = [
+            (
+                "Majelis Dikdasmen",
+                "Nur Salam, S.Fil, M.Pd",
+                "Muhdiyatmoko, S.Pd., M.Pd",
+                ["Triad Suparman, S.Pd, M.Pd", "Joko Suyatno, S.Pd", "Heru Hadiyono, S.Pd., S.Kom."],
+                1,
+            ),
+            (
+                "Majelis Tabligh",
+                "Purmoko, S.Kom",
+                "Retno Sugiyanto, S.Pd",
+                ["Supangat, S.Ag", "Noor Widodo", "Chairul Anwar, S.T", "Edi Sumarno, S.Sos"],
+                2,
+            ),
+            (
+                "Majelis Ekonomi",
+                "Wagino Hadi Pranoto",
+                "Saifudin, SP",
+                ["Ir. Kamaludin Gimo, HS", "H. Suparman", "Ali Mansur, S.Ag", "Drs. Mudzakir"],
+                3,
+            ),
+            (
+                "Majelis Wakaf",
+                "Lasur Suryadi",
+                "H. Suwardi, S.Ag, M.Si",
+                ["Sunarwo, Bc.Hk", "H. Ma'ruf Jagaf, S.H", "Kambali", "Ir. Suryo Agung"],
+                4,
+            ),
+            (
+                "Majelis Kader",
+                "Hendro Susilo, S.Pd",
+                "H. Kartono, M.Pd",
+                ["Endri Susanto, S.E", "Suyanto, SH., MH.", "Triyono", "Rachmad Eka Saputra", "Syahrudi"],
+                5,
+            ),
+            (
+                "Majelis Kesejahteraan Sosial & LAZISMU",
+                "H. Kusnan, S.Pd",
+                "Yusuf Aris Kurniawan, S.Pi",
+                ["H. Suparno, S.T, M.T", "Budi Saptono", "Suyatno"],
+                6,
+            ),
+        ]
+        for name, chair, spv, members, order in councils:
+            Council.objects.create(
+                name=name,
+                chairperson=chair,
+                supervisor=spv,
+                member_list=members,
+                display_order=order,
+            )
+
+        # 5. Ranting (PRM) Resmi
         Branch.objects.all().delete()
         branches = [
             ("PRM Mangkubumen", "Lasur Suryadi", "Jl. Kenanga II/20 A Rt.01/V Mangkubumen Surakarta", ""),
@@ -81,7 +136,7 @@ class Command(BaseCommand):
         for name, chair, addr, phone in branches:
             Branch.objects.create(name=name, chairperson=chair, address=addr, official_phone=phone)
 
-        # 5. Amal Usaha (AUM)
+        # 6. Amal Usaha (AUM)
         Charity.objects.all().delete()
         charities = [
             ("SD Muhammadiyah Program Khusus Kottabarat", "pendidikan", "Sekolah dasar unggulan berkarakter Islami dan bertaraf nasional.", "Jl. Kenanga No. 12, Surakarta"),
@@ -94,4 +149,4 @@ class Command(BaseCommand):
         for name, field, desc, addr in charities:
             Charity.objects.create(name=name, field=field, description=desc, address=addr)
 
-        self.stdout.write(self.style.SUCCESS("Data resmi PCM Kottabarat (Profil, Footer, Silsilah Pimpinan, Ranting, AUM) berhasil dimuat ke database."))
+        self.stdout.write(self.style.SUCCESS("Data resmi PCM Kottabarat (Profil, Footer, Silsilah Pimpinan, Majelis, Ranting, AUM) berhasil dimuat ke database."))
