@@ -35,11 +35,11 @@ Website resmi informasi publik untuk **Pimpinan Cabang Muhammadiyah (PCM) Kottab
 
 | Foto / Inisial | Nama | NIM | Peran Utama |
 |:---:|---|:---:|---|
-| 🏗️ | **Muhammad Ghafarel Zidane Al-Hakim** | — | **Koordinator & Frontend Architect:** Desain global (CSS murni), navbar melayang, hero visual, silsilah pimpinan, integrasi & merge conflict resolver |
-| ⚙️ | **Rofid** | L200240211 | **Backend & DevOps:** Models, views, routing URLs, forms, admin panel, konfigurasi Docker & PostgreSQL |
+| 🏗️ | **Muhammad Ghafarel Zidane Al-Hakim** | L200240230 | **Koordinator & Frontend Architect:** Desain global (CSS murni), navbar melayang, hero visual, silsilah pimpinan, integrasi & merge conflict resolver |
+| ⚙️ | **Rofid Hidayatullah** | L200240211 | **Backend & DevOps:** Models, views, routing URLs, forms, admin panel, konfigurasi Docker & PostgreSQL |
 | ⚙️ | **Fais Bayu Saputra** | L200240171 | **Backend Core:** Inisialisasi Django, models dasar, context processors, konfigurasi `settings.py`, dokumentasi |
 | 📄 | **Fawaz Kholifatullah** | L200240228 | **Frontend Engineer:** Halaman Profil (`profile.html`), Halaman Ranting (`branches.html`), Halaman Amal Usaha (`charities.html`) |
-| 📰 | **Hillary Aryodhito Juan Manunggal Yudhistira** | L200240215 | **Frontend Engineer:** Halaman Berita (`articles.html`), Detail Berita, Halaman Agenda, Unduhan, dan Formulir Kontak |
+| 📰 | **Hillary Aryodhito Juan M.Y** | L200240215 | **Frontend Engineer:** Halaman Berita (`articles.html`), Detail Berita, Halaman Agenda, Unduhan, dan Formulir Kontak |
 
 ---
 
