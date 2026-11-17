@@ -3,14 +3,14 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from website.models import Article, Branch, Charity, Event, Leader, OrganizationProfile, RelatedLink
+from website.models import Branch, Charity, Leader, OrganizationProfile, RelatedLink
 
 
 class Command(BaseCommand):
-    help = "Mengisi database dengan profil resmi, pimpinan, dan ranting PCM Kottabarat dari SK resmi."
+    help = "Mengisi database dengan profil resmi, pimpinan hierarkis, ranting, amal usaha, dan tautan resmi PCM Kottabarat."
 
     def handle(self, *args, **options):
-        # Profil Organisasi Resmi
+        # 1. Profil Organisasi Resmi
         prof, _ = OrganizationProfile.objects.get_or_create(
             defaults={
                 "name": "Pimpinan Cabang Muhammadiyah Kottabarat",
@@ -18,6 +18,8 @@ class Command(BaseCommand):
             }
         )
         prof.office_address = "Jl. Dr. Muwardi No. 24, Surakarta"
+        prof.official_phone = "(0271) 714422"
+        prof.official_email = "pcm.kottabarat@gmail.com"
         prof.tagline = "Gerakan Islam Berkemajuan Menuju Masyarakat Madani di Kottabarat"
         prof.about = (
             "Pimpinan Cabang Muhammadiyah (PCM) Kottabarat merupakan struktur persyarikatan "
@@ -26,32 +28,48 @@ class Command(BaseCommand):
         prof.ktam_members = None
         prof.save()
 
-        # Pimpinan Resmi (2022 - 2027)
+        # 2. Tautan Persyarikatan (Footer)
+        RelatedLink.objects.all().delete()
+        links = [
+            ("PDM Kota Surakarta", "https://muhammadiyahsolo.com/", 1),
+            ("PWM Jawa Tengah", "https://pwmjateng.com/", 2),
+            ("PP Muhammadiyah", "https://muhammadiyah.or.id/", 3),
+        ]
+        for name, url, order in links:
+            RelatedLink.objects.create(name=name, url=url, display_order=order)
+
+        # 3. Silsilah Pimpinan Lengkap & Hierarkis (2022 - 2027)
         Leader.objects.all().delete()
         leaders = [
-            ("Drs. H. Marpuji Ali, M.Si.", "Penasehat", "2022 - 2027", 1),
-            ("H. Sjamsuddin Dahlan", "Penasehat", "2022 - 2027", 2),
-            ("Dr. Muhammad Ali, M.Pd", "Penasehat", "2022 - 2027", 3),
-            ("Joko Susilo, S.TP., S.Pd.I., M.Pd", "Ketua Cabang", "2022 - 2027", 10),
-            ("Saifudin, SP", "Wakil Ketua I", "2022 - 2027", 11),
-            ("H. Kartono, S.Pd., M.Pd", "Wakil Ketua II", "2022 - 2027", 12),
-            ("Retno Sugiyanto, S.Pd", "Sekretaris", "2022 - 2027", 13),
-            ("Muhdiyatmoko, S.Pd., M.Pd", "Wakil Sekretaris", "2022 - 2027", 14),
-            ("Mukseto", "Bendahara", "2022 - 2027", 15),
-            ("Yusuf Aris Kurniawan, S.Pi", "Wakil Bendahara", "2022 - 2027", 16),
-            ("H. Suwardi, S.Ag, M.Si", "Anggota Pleno", "2022 - 2027", 17),
-            ("Lasur Suryadi", "Anggota Pleno", "2022 - 2027", 18),
-            ("Nur Salam, S.Fil, M.Pd", "Ketua Majelis Dikdasmen", "2022 - 2027", 20),
-            ("Purmoko, S.Kom", "Ketua Majelis Tabligh", "2022 - 2027", 21),
-            ("Wagino Hadi Pranoto", "Ketua Majelis Ekonomi", "2022 - 2027", 22),
-            ("Lasur Suryadi", "Ketua Majelis Wakaf", "2022 - 2027", 23),
-            ("Hendro Susilo, S.Pd", "Ketua Majelis Kader", "2022 - 2027", 24),
-            ("H. Kusnan, S.Pd", "Ketua Majelis Kesejahteraan Sosial & LAZISMU", "2022 - 2027", 25),
+            # Tier: penasehat
+            ("Drs. H. Marpuji Ali, M.Si.", "Penasehat 1", "penasehat", "2022 - 2027", "", 1),
+            ("H. Sjamsuddin Dahlan", "Penasehat 2", "penasehat", "2022 - 2027", "", 2),
+            ("Dr. Muhammad Ali, M.Pd", "Penasehat 3", "penasehat", "2022 - 2027", "", 3),
+            # Tier: ketua
+            ("Joko Susilo, S.TP., S.Pd.I., M.Pd", "Ketua Cabang", "ketua", "2022 - 2027", "", 10),
+            # Tier: wakil
+            ("Saifudin, SP", "Wakil Ketua I", "wakil", "2022 - 2027", "Koordinator Bidang: Tabligh, Tarjih, Ekonomi", 20),
+            ("H. Kartono, S.Pd., M.Pd", "Wakil Ketua II", "wakil", "2022 - 2027", "Koordinator Bidang: Dikdasmen, Kader, Kesos", 21),
+            # Tier: harian
+            ("Retno Sugiyanto, S.Pd", "Sekretaris", "harian", "2022 - 2027", "", 30),
+            ("Muhdiyatmoko, S.Pd., M.Pd", "Wakil Sekretaris", "harian", "2022 - 2027", "", 31),
+            ("Mukseto", "Bendahara", "harian", "2022 - 2027", "", 32),
+            ("Yusuf Aris Kurniawan, S.Pi", "Wakil Bendahara", "harian", "2022 - 2027", "", 33),
+            # Tier: pleno
+            ("H. Suwardi, S.Ag, M.Si", "Anggota Pleno", "pleno", "2022 - 2027", "", 40),
+            ("Lasur Suryadi", "Anggota Pleno", "pleno", "2022 - 2027", "", 41),
         ]
-        for name, pos, period, order in leaders:
-            Leader.objects.create(name=name, position=pos, period=period, display_order=order)
+        for name, pos, tier, period, scope, order in leaders:
+            Leader.objects.create(
+                name=name,
+                position=pos,
+                tier=tier,
+                period=period,
+                scope=scope,
+                display_order=order,
+            )
 
-        # Ranting (PRM) Resmi
+        # 4. Ranting (PRM) Resmi
         Branch.objects.all().delete()
         branches = [
             ("PRM Mangkubumen", "Lasur Suryadi", "Jl. Kenanga II/20 A Rt.01/V Mangkubumen Surakarta", ""),
@@ -63,7 +81,8 @@ class Command(BaseCommand):
         for name, chair, addr, phone in branches:
             Branch.objects.create(name=name, chairperson=chair, address=addr, official_phone=phone)
 
-        # Amal Usaha (AUM)
+        # 5. Amal Usaha (AUM)
+        Charity.objects.all().delete()
         charities = [
             ("SD Muhammadiyah Program Khusus Kottabarat", "pendidikan", "Sekolah dasar unggulan berkarakter Islami dan bertaraf nasional.", "Jl. Kenanga No. 12, Surakarta"),
             ("SMP Muhammadiyah Program Khusus Kottabarat", "pendidikan", "Sekolah menengah pertama inovatif berbasis sains dan tahfidz.", "Jl. Pleret Raya, Banyuanyar, Surakarta"),
@@ -73,6 +92,6 @@ class Command(BaseCommand):
             ("BTM Mandiri Berkah Kottabarat", "ekonomi", "Baitut Tamwil Muhammadiyah penyedia pembiayaan mikro syariah bagi UMKM.", "Jl. Kenanga No. 14, Surakarta"),
         ]
         for name, field, desc, addr in charities:
-            Charity.objects.get_or_create(name=name, defaults={"field": field, "description": desc, "address": addr})
+            Charity.objects.create(name=name, field=field, description=desc, address=addr)
 
-        self.stdout.write(self.style.SUCCESS("Data resmi PCM Kottabarat berhasil dimuat ke database."))
+        self.stdout.write(self.style.SUCCESS("Data resmi PCM Kottabarat (Profil, Footer, Silsilah Pimpinan, Ranting, AUM) berhasil dimuat ke database."))
