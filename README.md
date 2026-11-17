@@ -80,8 +80,8 @@ Pastikan Docker Desktop sudah terpasang dan berjalan di komputer Anda.
    ```
 
 4. **Buka di browser:**
-   - **Website Publik:** [http://localhost:8000/](http://localhost:8000/)
-   - **Panel Admin:** [http://localhost:8000/admin/](http://localhost:8000/admin/)
+   - **Website Publik:** [https://pcm-kottabarat.onrender.com/](https://pcm-kottabarat.onrender.com/)
+   - **Panel Admin:** [https://pcm-kottabarat.onrender.com/admin/login/?next=/admin/](https://pcm-kottabarat.onrender.com/admin/login/?next=/admin/)
 
 ---
 
