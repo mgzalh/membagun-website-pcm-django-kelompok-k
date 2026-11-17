@@ -115,12 +115,12 @@ class Command(BaseCommand):
                 6,
             ),
         ]
-        for name, chair, spv, members, order in councils:
+        for name, chair, spv, member_items, order in councils:
             Council.objects.create(
                 name=name,
                 chairperson=chair,
                 supervisor=spv,
-                member_list=members,
+                members="\n".join(member_items),
                 display_order=order,
             )
 
