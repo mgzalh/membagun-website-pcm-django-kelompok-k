@@ -26,14 +26,12 @@ h3 { font-size: 1.2rem; }
 .skip-link { position: absolute; top: -60px; left: 1rem; z-index: 100; padding: .6rem 1rem; background: white; border-radius: 8px; box-shadow: 0 10px 24px rgb(23 47 43 / 18%); }
 .skip-link:focus { top: 1rem; }
 .site-header {
-    position: absolute;
-    top: 12px;
-    left: 0;
-    width: 100%;
-    z-index: 60;
-    padding-block: 0;
-    background: transparent;
-    pointer-events: none;
+  position: sticky;
+  top: 12px;
+  z-index: 60;
+  padding-block: 0;
+  background: transparent;
+  pointer-events: none;
 }
 .header-inner {
   pointer-events: auto;
@@ -61,14 +59,7 @@ h3 { font-size: 1.2rem; }
 .main-nav a:hover { color: var(--green); }
 .main-nav .nav-contact { padding: .55rem .9rem; color: white; background: var(--green); border-radius: 999px; }
 .nav-toggle, .nav-toggle-label { display: none; }
-
-.hero {
-    position: relative;
-    overflow: hidden;
-    color: white;
-    background: #063428;
-    margin-top: 0;
-}
+.hero { position: relative; overflow: hidden; color: white; background: #063428; }
 .hero-bg-wrapper { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; pointer-events: none; }
 .hero-bg-tokoh { width: 100%; height: 100%; object-fit: cover; object-position: center center; opacity: 0.5; display: block; }
 .hero-bg-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6, 44, 34, 0.88) 0%, rgba(6, 44, 34, 0.72) 48%, rgba(10, 68, 52, 0.42) 80%, rgba(12, 80, 60, 0.28) 100%); }
@@ -112,19 +103,13 @@ h3 { font-size: 1.2rem; }
 .article-card h3 { margin: .55rem 0; }
 .article-card p { color: var(--muted); font-size: .9rem; }
 .article-card .text-link { font-size: .85rem; }
-.event-list { display: grid; gap: 1rem; }
-.event-item { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.25rem; border: 1px solid var(--line); border-radius: 14px; background: white; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03); transition: transform .15s ease, box-shadow .15s ease; }
-.event-item:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(12, 107, 77, 0.08); }
-.event-date { display: flex; width: 74px; flex: 0 0 74px; align-items: center; flex-direction: column; padding: .6rem .35rem; border-radius: 12px; color: var(--green-dark); background: #ebf5ee; border: 1px solid #cce5d6; text-align: center; }
-.event-date .event-day { font: 800 1.65rem/1.05 "Manrope", sans-serif; color: var(--green); margin-bottom: 2px; }
-.event-date .event-month { font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--green-dark); }
-.event-date .event-year { font-size: .68rem; color: var(--muted); font-weight: 600; }
-.event-info { flex: 1; min-width: 0; }
-.event-info h3 { margin: 0 0 .35rem; font-size: 1.15rem; color: var(--ink); }
-.event-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .85rem; margin: .35rem 0; font-size: .88rem; color: var(--muted); }
-.event-meta span { display: inline-flex; align-items: center; }
-.event-desc { margin: .45rem 0 0 !important; color: #4a5d57 !important; font-size: .9rem !important; line-height: 1.5; }
-.event-past { opacity: .75; background: #fafcfa; }
+.event-list { display: grid; gap: .75rem; }
+.event-item { display: flex; align-items: flex-start; gap: 1.2rem; padding: 1.15rem; border: 1px solid var(--line); border-radius: 12px; background: white; }
+.event-date { display: flex; width: 66px; flex: 0 0 66px; align-items: center; flex-direction: column; padding: .45rem; border-radius: 10px; color: var(--green); background: #eef5e5; font-size: .7rem; font-weight: 700; text-transform: uppercase; }
+.event-date span { font: 800 1.4rem "Manrope", sans-serif; }
+.event-item h3, .event-item p { margin: 0 0 .3rem; }
+.event-item p { color: var(--muted); font-size: .9rem; }
+.event-past { opacity: .8; }
 .empty-state { grid-column: 1 / -1; margin: 0; padding: 1.25rem; border: 1px dashed #b9c9bf; border-radius: 12px; color: var(--muted); background: rgb(255 255 255 / 70%); }
 .page-hero { padding-block: 3.8rem; color: white; background: linear-gradient(115deg, #073e31, #0c6b4d); }
 .page-hero h1 { margin: .25rem 0 .5rem; font-size: clamp(2.2rem, 4vw, 3.5rem); }
