@@ -21,4 +21,4 @@ RUN python manage.py collectstatic --noinput \
 
 USER 10001:10001
 EXPOSE 8000
-CMD ["sh", "-c", "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py seed_pcm && python -c \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'AdminPCM2026!')\" && gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
